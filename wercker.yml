@@ -81,14 +81,15 @@ deploy-to-cluster:
           tenancy=$TENANCY_OCID
           region=$REGION
           EOF
-          chmod 400 ~/.oci/config
+          chmod 600 ~/.oci/config
     - script:
         name: "Visualise OCI config"
         code: cat ~/.oci/config
     - script:
         name: copy private key
         code: |
-          cp oci_api_key.pem ~/.oci
+          cp $PRIVATE_KEY ~/.oci
+          chmod go-rwx ~/.oci/config/$PRIVATE_KEY
           ls -lart ~/.oci
     - script:
         name: create kubeconfig
@@ -96,7 +97,7 @@ deploy-to-cluster:
           echo $PATH
           export PATH=$PATH:/root/bin
           mkdir -p ~/.kube
-          oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.ap-seoul-1.aaaaaaaaafrwkmzwmuywizdbmy4tgobsmnstiobqhaydqytcmcztqztgg42g --file $HOME/.kube/config --region ap-seoul-1 --token-version 2.0.0
+          oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.ap-seoul-1.aaaaaaaaae3dmmtbmi4tkodgmq3dimjygjrdmy3fgfrgkzjymc3wmzjvmq2d --file $HOME/.kube/config --region ap-seoul-1 --token-version 2.0.0
           export KUBECONFIG=~/.kube/config
     - kubectl:
         name: delete secret
