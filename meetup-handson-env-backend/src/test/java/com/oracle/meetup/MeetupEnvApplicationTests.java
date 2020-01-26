@@ -1,10 +1,10 @@
-package com.boinit.kerisaigbackend;
+package com.oracle.meetup;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoApplicationTests {
+class MeetupEnvApplicationTests {
 
 	@Test
 	void contextLoads() {
