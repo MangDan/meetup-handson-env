@@ -81,7 +81,7 @@ deploy-to-cluster:
           tenancy=$TENANCY_OCID
           region=$REGION
           EOF
-          chmod 600 ~/.oci/config
+          chmod go-rwx ~/.oci/$PRIVATE_KEY
     - script:
         name: "Visualise OCI config"
         code: cat ~/.oci/config
@@ -89,7 +89,6 @@ deploy-to-cluster:
         name: copy private key
         code: |
           cp $PRIVATE_KEY ~/.oci
-          chmod go-rwx ~/.oci/config/$PRIVATE_KEY
           ls -lart ~/.oci
     - script:
         name: create kubeconfig
