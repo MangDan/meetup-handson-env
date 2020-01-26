@@ -89,6 +89,7 @@ export default {
     formHasErrors: false,
     itemsPerPage: -1, //all
     headers: [
+      { text: "실습 서버", value: "env_name", align: "center" },
       { text: "OS 계정", value: "osuser", align: "center" },
       { text: "클라우드 테넌트", value: "tenant", align: "center" },
       { text: "리전", value: "region", align: "center" },

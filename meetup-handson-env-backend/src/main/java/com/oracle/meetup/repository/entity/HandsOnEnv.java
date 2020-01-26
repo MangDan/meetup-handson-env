@@ -49,6 +49,9 @@ public class HandsOnEnv implements Serializable {
     @Column(name = "ENV_IP", insertable = false, updatable = false)
     private String env_ip;
 
+    @Column(name = "ENV_NAME", insertable = false, updatable = false)
+    private String env_name;
+
     public int getNum() {
         return num;
     }
@@ -135,5 +138,13 @@ public class HandsOnEnv implements Serializable {
 
     public void setEnv_ip(String env_ip) {
         this.env_ip = env_ip;
+    }
+
+    public String getEnv_name() {
+        return env_name;
+    }
+
+    public void setEnv_name(String env_name) {
+        this.env_name = env_name;
     }
 }
