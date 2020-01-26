@@ -1,0 +1,134 @@
+#Use OpenJDK base docker image from dockerhub and open the application port on the docker container
+box:
+  id: openjdk:8-jdk
+#  id: jimador/docker-jdk-8-maven-node
+ports:
+  - 8080
+ 
+#Build our application using Maven, just as we always have
+build:
+  steps:
+    - script:
+        name: pwd
+        code: pwd
+    - install-packages:
+        packages: maven
+    - script:
+        name: maven keris-aig-backend build
+        cwd: keris-aig-backend
+        code: mvn clean package
+
+#Push the docker image with our built and tested application to the Oracle Container Registry
+keris-aig-backend-push:
+  steps:
+    - internal/docker-push:
+        username: $DOCKER_USERNAME
+        password: $OCI_AUTH_TOKEN
+        repository: $DOCKER_REGISTRY/$DOCKER_REPO
+        registry: https://$DOCKER_REGISTRY/v2
+        tag: $WERCKER_GIT_BRANCH-$WERCKER_GIT_COMMIT-keris-aig-backend
+        working-dir: /pipeline/source/keris-aig-backend
+        ports: 8080
+        cmd: java -jar target/keris-aig-backend-1.0.jar
+
+keris-aig-frontend-push:
+  steps:
+    - script:
+        name: pwd
+        code: pwd
+    - internal/docker-build:
+        context: keris-aig-frontend
+        dockerfile: Dockerfile
+        image-name: keris-aig-frontend
+    - internal/docker-push:
+        image-name: keris-aig-frontend
+        username: $DOCKER_USERNAME
+        password: $OCI_AUTH_TOKEN
+        repository: $DOCKER_REGISTRY/$DOCKER_REPO
+        registry: https://$DOCKER_REGISTRY/v2
+        tag: $WERCKER_GIT_BRANCH-$WERCKER_GIT_COMMIT-keris-aig-frontend
+
+#Deploy our container from the Oracle Container Registry to the Oracle Container Engine (Kubernetes)
+deploy-to-cluster:
+  box:
+    id: debian:stable-slim
+#    cmd: /bin/sh
+  steps:
+    - bash-template
+    # - damith/wercker-oke-token-v2@3.14.4:
+    #     tenancy: $TENANCY_OCID
+    #     user: $USER_OCID
+    #     region: $REGION
+    #     private_key: $PRIVATE_KEY
+    #     fingerprint: $FINGERPRINT
+    - shellcheck
+
+    - install-packages:
+        packages: curl
+    - script:
+        name: install oci cli
+        code: |
+              curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh > install.sh
+              chmod +x install.sh
+              ./install.sh --accept-all-defaults
+              rm -Rf ~/.oci
+              mkdir ~/.oci
+              cat > ~/.oci/config << EOF
+              [DEFAULT]
+              user=$USER_OCID
+              fingerprint=$FINGERPRINT
+              key_file=~/.oci/$PRIVATE_KEY
+              tenancy=$TENANCY_OCID
+              region=$REGION
+              EOF
+              chmod 600 ~/.oci/config
+    - script:
+        name: "Visualise OCI config"
+        code: cat ~/.oci/config
+    - script:
+        name: copy private key
+        code: |
+              cp oci_api_key.pem ~/.oci
+              ls -lart ~/.oci
+    - script:
+        name: create kubeconfig
+        code: |
+              echo $PATH
+              export PATH=$PATH:/root/bin
+              mkdir -p ~/.kube
+              oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.ap-seoul-1.aaaaaaaaafrwkmzwmuywizdbmy4tgobsmnstiobqhaydqytcmcztqztgg42g --file $HOME/.kube/config --region ap-seoul-1 --token-version 2.0.0
+              export KUBECONFIG=~/.kube/config
+    - kubectl:
+        name: delete secret
+        server: $KUBERNETES_MASTER
+#        token: $KUBERNETES_AUTH_TOKEN
+        insecure-skip-tls-verify: true
+        command: delete secret wercker; echo delete registry secret
+
+    - kubectl:
+        name: create secret
+        server: $KUBERNETES_MASTER
+#        token: $KUBERNETES_AUTH_TOKEN
+        insecure-skip-tls-verify: true
+        command: create secret docker-registry wercker --docker-server=$DOCKER_REGISTRY --docker-email=nobody@oracle.com --docker-username=$DOCKER_USERNAME --docker-password='$OCI_AUTH_TOKEN'; echo create registry secret
+    - script:
+        name: "Visualise Kubernetes config"
+        code: cat kube-keris-aig-backend-config.yml
+
+    - kubectl:
+        name: deploy keris-aig-backend service to kubernetes
+        server: $KUBERNETES_MASTER
+#        token: $KUBERNETES_AUTH_TOKEN
+        insecure-skip-tls-verify: true
+        command: apply -f kube-keris-aig-backend-config.yml
+
+    - script:
+        name: "Visualise Kubernetes config"
+        code: cat kube-keris-aig-frontend-config.yml
+
+    - kubectl:
+        name: deploy kube-keris-aig-frontend ui to kubernetes
+        server: $KUBERNETES_MASTER
+#        token: $KUBERNETES_AUTH_TOKEN
+        insecure-skip-tls-verify: true
+        command: apply -f kube-keris-aig-frontend-config.yml

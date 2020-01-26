@@ -1,0 +1,58 @@
+#
+# Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: meetup-handson-env-backend
+  labels:
+    commit: ${WERCKER_GIT_COMMIT}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: meetup-handson-env-backend
+  template:
+    metadata:
+      labels:
+        app: meetup-handson-env-backend
+        commit: ${WERCKER_GIT_COMMIT}
+    spec:
+      containers:
+      - name: meetup-handson-env-backend
+        image: ${DOCKER_REGISTRY}/${DOCKER_REPO}:${WERCKER_GIT_BRANCH}-${WERCKER_GIT_COMMIT}-meetup-handson-env-backend
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+      imagePullSecrets:
+        - name: wercker
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: meetup-handson-env-backend
+  labels:
+    app: meetup-handson-env-backend
+    commit: ${WERCKER_GIT_COMMIT}
+spec:
+  ports:
+  - port: 8000
+    targetPort: 8000
+    name: http
+  selector:
+    app: meetup-handson-env-backend
+  type: LoadBalancer
