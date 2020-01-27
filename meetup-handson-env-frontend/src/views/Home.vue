@@ -25,20 +25,10 @@ import EnvSearch from "../components/EnvSearch";
 
 export default {
   name: "home",
+  props: ["role", "passwd"],
   components: {
     EnvList,
     EnvSearch
-  },
-  data() {
-    return { role: "", passwd: "" };
-  },
-  mounted() {
-    this.role = this.$route.params.role;
-    this.passwd = this.$route.params.passwd;
-    /* eslint-disable no-console */
-    console.log(this.role);
-  },
-  created() {},
-  methods: {}
+  }
 };
 </script>

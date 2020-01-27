@@ -9,7 +9,7 @@
   >
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title>실습 환경 목록 {{role}} {{passwd}}</v-toolbar-title>
+        <v-toolbar-title>실습 환경 목록</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-icon @click="initialize">refresh</v-icon>
         <v-dialog v-model="dialog" max-width="500px">
@@ -231,8 +231,17 @@ export default {
 
       let data = {
         num: this.editedItem.num,
+        osuser: this.editedItem.osuser,
         username: this.editedItem.username,
-        email: this.editedItem.email
+        email: this.editedItem.email,
+        tenant: this.editedItem.tenant,
+        region: this.editedItem.region,
+        cloud_account: this.editedItem.cloud_account,
+        cloud_account_pw: this.editedItem.cloud_account_pw,
+        handson_doc_url: this.editedItem.handson_doc_url,
+        key_download_url: this.editedItem.key_download_url,
+        env_ip: this.editedItem.env_ip,
+        env_name: this.editedItem.env_name
       };
 
       return new Promise((resolve, reject) => {

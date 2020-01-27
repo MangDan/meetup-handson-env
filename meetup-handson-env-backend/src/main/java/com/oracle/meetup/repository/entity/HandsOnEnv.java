@@ -15,11 +15,11 @@ public class HandsOnEnv implements Serializable {
      */
     private static final long serialVersionUID = -3423961242822117508L;
 
-    @Column(name = "NUM", insertable = false, updatable = false)
+    @Column(name = "NUM", updatable = false)
     @Id
     private int num;
 
-    @Column(name = "OS_USER", insertable = false, updatable = false)
+    @Column(name = "OS_USER")
     private String osuser;
 
     @Column(name = "USERNAME")
@@ -28,28 +28,28 @@ public class HandsOnEnv implements Serializable {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "TENANT", insertable = false, updatable = false)
+    @Column(name = "TENANT")
     private String tenant;
 
-    @Column(name = "REGION", insertable = false, updatable = false)
+    @Column(name = "REGION")
     private String region;
 
-    @Column(name = "CLOUD_ACCOUNT", insertable = false, updatable = false)
+    @Column(name = "CLOUD_ACCOUNT")
     private String cloud_account;
 
-    @Column(name = "CLOUD_ACCOUNT_PW", insertable = false, updatable = false)
+    @Column(name = "CLOUD_ACCOUNT_PW")
     private String cloud_account_pw;
 
-    @Column(name = "HANDSON_DOC_URL", insertable = false, updatable = false)
+    @Column(name = "HANDSON_DOC_URL")
     private String handson_doc_url;
 
-    @Column(name = "KEY_DOWNLOAD_URL", insertable = false, updatable = false)
+    @Column(name = "KEY_DOWNLOAD_URL")
     private String key_download_url;
 
-    @Column(name = "ENV_IP", insertable = false, updatable = false)
+    @Column(name = "ENV_IP")
     private String env_ip;
 
-    @Column(name = "ENV_NAME", insertable = false, updatable = false)
+    @Column(name = "ENV_NAME")
     private String env_name;
 
     public int getNum() {

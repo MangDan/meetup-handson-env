@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <Header />
+    <Header :role="role" :passwd="passwd" />
     <v-content height="auto">
-      <router-view></router-view>
+      <router-view :role="role" :passwd="passwd"></router-view>
     </v-content>
     <Footer />
   </v-app>
@@ -20,8 +20,12 @@ export default {
     Footer
   },
 
-  data: () => ({
-    //
-  })
+  data() {
+    return { role: "", passwd: "" };
+  },
+  mounted() {
+    this.role = this.$route.params.role;
+    this.passwd = this.$route.params.passwd;
+  }
 };
 </script>

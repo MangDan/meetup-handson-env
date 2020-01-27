@@ -10,7 +10,7 @@
           contain
         ></v-img>
       </a>
-      <v-toolbar-title>Oracle Korea Developer Meetup</v-toolbar-title>
+      <v-toolbar-title>Oracle Korea Developer Meetup {{(role == 'admin' && passwd == 'welcome1') ? '(관리자)' : ''}}</v-toolbar-title>
     </div>
     <v-spacer></v-spacer>
     <v-img
@@ -22,4 +22,13 @@
     ></v-img>
   </v-app-bar>
 </template>
+<script>
+export default {
+  name: "Header",
+  props: ["role", "passwd"]
+};
+</script>
+
+
+
   

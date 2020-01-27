@@ -5,7 +5,7 @@
       left
       :position-x="tooltipPositionX"
       :position-y="tooltipPositionY"
-      color="blue"
+      color="red"
     >
       <span>Copied</span>
     </v-tooltip>
@@ -109,26 +109,6 @@
           <v-card class="mx-auto" outlined tile>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title disabled>실습환경 접속방법</v-list-item-title>
-                <v-list-item-subtitle>
-                  <kbd @click="openConnectGuideDialog" style="cursor:pointer">클릭</kbd>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-icon>
-                <v-btn icon>
-                  <v-icon @click="copy(env.email, $event)">mdi-content-copy</v-icon>
-                </v-btn>
-              </v-list-item-icon>
-            </v-list-item>
-          </v-card>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="12" sm="6" md="6" class="pa-1">
-          <v-card class="mx-auto" outlined tile>
-            <v-list-item>
-              <v-list-item-content>
                 <v-list-item-title disabled>클라우드 테넌트(Tenant)</v-list-item-title>
                 <v-list-item-subtitle>
                   <kbd>{{env.tenant}}</kbd>
@@ -142,24 +122,8 @@
             </v-list-item>
           </v-card>
         </v-col>
-        <v-col cols="12" sm="6" md="6" class="pa-1">
-          <v-card class="mx-auto" outlined tile>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title disabled>리전</v-list-item-title>
-                <v-list-item-subtitle>
-                  <kbd>{{env.region}}</kbd>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-icon>
-                <v-btn icon>
-                  <v-icon @click="copy(env.region, $event)">mdi-content-copy</v-icon>
-                </v-btn>
-              </v-list-item-icon>
-            </v-list-item>
-          </v-card>
-        </v-col>
       </v-row>
+
       <v-row>
         <v-col cols="12" sm="6" md="6" class="pa-1">
           <v-card class="mx-auto" outlined tile>
@@ -190,6 +154,33 @@
               <v-list-item-icon>
                 <v-btn icon>
                   <v-icon @click="copy(env.cloud_account_pw, $event)">mdi-content-copy</v-icon>
+                </v-btn>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" sm="12" md="12" class="pa-1">
+          <v-card class="mx-auto" outlined tile>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title disabled>오라클 클라우드 접속 주소 ({{env.region}})</v-list-item-title>
+                <v-list-item-subtitle>
+                  <kbd>
+                    <a :href="'https://console.'+env.region+'.oraclecloud.com?tenant='+env.tenant">
+                      <font
+                        color="white"
+                      >https://console.{{env.region}}.oraclecloud.com?tenant={{env.tenant}}</font>
+                    </a>
+                  </kbd>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-icon>
+                <v-btn icon>
+                  <v-icon
+                    @click="copy('https://console.'+env.region+'.oraclecloud.com?tenant='+env.tenant, $event)"
+                  >mdi-content-copy</v-icon>
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -298,20 +289,6 @@
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title disabled>실습환경 접속방법</v-list-item-title>
-            <v-list-item-subtitle>
-              <kbd @click="openConnectGuideDialog" style="cursor:pointer">클릭</kbd>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-          <v-list-item-icon>
-            <v-btn icon>
-              <v-icon @click="copy(env.email, $event)">mdi-content-copy</v-icon>
-            </v-btn>
-          </v-list-item-icon>
-        </v-list-item>
-        <v-divider></v-divider>
-        <v-list-item>
-          <v-list-item-content>
             <v-list-item-title disabled>클라우드 테넌트(Tenant)</v-list-item-title>
             <v-list-item-subtitle>
               <kbd>{{env.tenant}}</kbd>
@@ -320,20 +297,6 @@
           <v-list-item-icon>
             <v-btn icon>
               <v-icon @click="copy(env.tenant, $event)">mdi-content-copy</v-icon>
-            </v-btn>
-          </v-list-item-icon>
-        </v-list-item>
-        <v-divider></v-divider>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title disabled>리전</v-list-item-title>
-            <v-list-item-subtitle>
-              <kbd>{{env.region}}</kbd>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-          <v-list-item-icon>
-            <v-btn icon>
-              <v-icon @click="copy(env.region, $event)">mdi-content-copy</v-icon>
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
@@ -368,6 +331,28 @@
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
+            <v-list-item-title disabled>오라클 클라우드 접속 주소 ({{env.region}})</v-list-item-title>
+            <v-list-item-subtitle>
+              <kbd>
+                <a :href="'https://console.'+env.region+'.oraclecloud.com?tenant='+env.tenant">
+                  <font
+                    color="white"
+                  >https://console.{{env.region}}.oraclecloud.com?tenant={{env.tenant}}</font>
+                </a>
+              </kbd>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-list-item-icon>
+            <v-btn icon>
+              <v-icon
+                @click="copy('https://console.'+env.region+'.oraclecloud.com?tenant='+env.tenant, $event)"
+              >mdi-content-copy</v-icon>
+            </v-btn>
+          </v-list-item-icon>
+        </v-list-item>
+        <v-divider></v-divider>
+        <v-list-item>
+          <v-list-item-content>
             <v-list-item-title disabled>실습 문서 및 소스</v-list-item-title>
             <v-list-item-subtitle>
               <kbd>
@@ -385,34 +370,6 @@
         </v-list-item>
       </v-list>
     </v-container>
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-      <v-card>
-        <v-app-bar dark elevate-on-scroll scroll-target="#conn-guides" color="primary">
-          <v-btn icon dark @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>실습환경 접속방법</v-toolbar-title>
-        </v-app-bar>
-        <v-list id="conn-guides" class="overflow-y-auto" max-height="600">
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>
-                <a href="https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe">Putty Download</a>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <v-img src="/assets/img/putty_connect_guide.png" aspect-ratio="2" contain></v-img>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item>
-            <v-img src="/assets/img/mac_terminal_connect_guide.png" aspect-ratio="2" contain></v-img>
-          </v-list-item>
-        </v-list>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 <script>
@@ -423,7 +380,6 @@ export default {
     tooltipPositionX: 0,
     tooltipPositionY: 0,
     tooltipCloseDelay: 1000,
-    dialog: false,
     notifications: false,
     sound: true,
     widgets: false,
