@@ -6,10 +6,10 @@ module.exports = {
   ],
   configureWebpack: {
     devServer: {
-      host: '140.238.22.91',
-      port: '80'
-      //host: 'localhost',
-      //port: '8080'
+      //host: '140.238.22.91',
+      //port: '80'
+      host: 'localhost',
+      port: '8080'
     }
   }
 }

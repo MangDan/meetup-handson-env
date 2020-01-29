@@ -10,7 +10,7 @@
           <v-icon left>mdi-note-text</v-icon>실습환경 접속방법
         </v-chip>
         <v-chip
-          v-if="role == 'admin' && passwd == 'welcome1'"
+          v-if="$store.state.access_token"
           class="ma-2"
           color="deep-purple accent-4"
           outlined
@@ -18,6 +18,7 @@
         >
           <v-icon left>mdi-wrench</v-icon>실습 환경 업데이트
         </v-chip>
+
         <v-spacer></v-spacer>
         <v-btn icon>
           <v-icon
@@ -81,6 +82,7 @@
         </v-card>
       </v-dialog>
     </v-card>
+
     <v-dialog v-model="guideDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card>
         <v-app-bar dark elevate-on-scroll scroll-target="#conn-guides" color="primary">
@@ -486,6 +488,7 @@ export default {
     guideDialog: false,
     updateEnvDialog: false,
     updateEnvFormDialog: false,
+    adminMode: true,
     snack: false,
     snackColor: "",
     snackText: "",
@@ -689,9 +692,10 @@ export default {
 
       this.$axios({
         method: "post",
-        url: "/api/v1/meetup/env/reset",
+        url: "/api/v1/admin/meetup/env/reset",
         data: data,
         headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("access_token"),
           "Content-Type": "application/json"
         }
       })
@@ -760,9 +764,10 @@ export default {
 
       this.$axios({
         method: "post",
-        url: "/api/v1/meetup/env/reset",
+        url: "/api/v1/admin/meetup/env/reset",
         data: this.editedItem,
         headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("access_token"),
           "Content-Type": "application/json"
         }
       })
@@ -785,9 +790,10 @@ export default {
       console.log(item);
       this.$axios({
         method: "post",
-        url: "/api/v1/meetup/env/reset",
+        url: "/api/v1/admin/meetup/env/reset",
         data: item,
         headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("access_token"),
           "Content-Type": "application/json"
         }
       })

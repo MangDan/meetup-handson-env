@@ -149,7 +149,7 @@ export default {
           this.envs = result.data;
         })
         .catch(error => {
-          console.log(error);
+          console.log(error.response.data);
         });
     },
     getColor(assign) {

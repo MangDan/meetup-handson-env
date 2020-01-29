@@ -48,11 +48,11 @@ public class HandsOnEnvController {
                 throw new Exception(handsOnEnvById.get().getUsername() + "님이 이미 등록하였습니다.");
             }
         } else {
-            throw new Exception("Please select the environment!");
+            throw new Exception("Please submit with other email.");
         }
     }
 
-    @PostMapping(value = "/api/v1/meetup/env/reset")
+    @PostMapping(value = "/api/v1/admin/meetup/env/reset")
     public HandsOnEnv resetEnv(@RequestBody HandsOnEnv handsOnEnv) throws Exception {
         return handsOnEnvRepository.save(handsOnEnv);
     }
