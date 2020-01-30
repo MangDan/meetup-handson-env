@@ -17,8 +17,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
-    // public static final long JWT_TOKEN_VALIDITY = 1 * (60 * 60); // 1 hours
-    public static final long JWT_TOKEN_VALIDITY = 60; // 1 min
+    public static final long JWT_TOKEN_VALIDITY = 1 * (60 * 60); // 1 hours
+    // public static final long JWT_TOKEN_VALIDITY = 60; // 1 min
     public static final long JWT_REFRESH_TOKEN_VALIDITY = 14 * (60 * 60 * 24); // 2 weeks
 
     @Value("${jwt.secret}")
@@ -36,8 +36,9 @@ public class JwtTokenUtil implements Serializable {
 
     // retrieve expiration date from jwt token
     public String getExpiresIn(String token) {
-        System.out.println(Math.abs(getClaimFromToken(token, Claims::getExpiration).getTime()
-                - new Date(System.currentTimeMillis()).getTime()));
+        // System.out.println(Math.abs(getClaimFromToken(token,
+        // Claims::getExpiration).getTime()
+        // - new Date(System.currentTimeMillis()).getTime()));
         return Long.toString(Math.abs(getClaimFromToken(token, Claims::getExpiration).getTime()
                 - new Date(System.currentTimeMillis()).getTime()) / 1000);
     }
@@ -48,12 +49,12 @@ public class JwtTokenUtil implements Serializable {
     }
 
     // for retrieveing any information from token we will need the secret key
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
     // check if the token has expired
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }

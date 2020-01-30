@@ -16,7 +16,9 @@
           outlined
           @click="openUpdateEnvDialog"
         >
-          <v-icon left>mdi-wrench</v-icon>실습 환경 업데이트
+          <v-icon left>mdi-wrench</v-icon>
+          실습 환경 업데이트
+          {{ $store.state.expires_in }}
         </v-chip>
 
         <v-spacer></v-spacer>
@@ -695,7 +697,7 @@ export default {
         url: "/api/v1/admin/meetup/env/reset",
         data: data,
         headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          "X-Authorization": "Bearer " + sessionStorage.getItem("access_token"),
           "Content-Type": "application/json"
         }
       })
@@ -767,7 +769,7 @@ export default {
         url: "/api/v1/admin/meetup/env/reset",
         data: this.editedItem,
         headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          "X-Authorization": "Bearer " + sessionStorage.getItem("access_token"),
           "Content-Type": "application/json"
         }
       })
@@ -793,7 +795,7 @@ export default {
         url: "/api/v1/admin/meetup/env/reset",
         data: item,
         headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          "X-Authorization": "Bearer " + sessionStorage.getItem("access_token"),
           "Content-Type": "application/json"
         }
       })

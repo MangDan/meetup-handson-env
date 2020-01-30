@@ -21,9 +21,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.jsonwebtoken.Claims;
 
 @RestController
 @CrossOrigin
@@ -114,6 +117,24 @@ public class JwtAuthenticationController {
         }
 
         return ResponseEntity.ok(new JwtResponse(access_token, refresh_token, expires_in, errorCode, errorMessage));
+    }
+
+    @RequestMapping(value = "/api/auth/claims", method = RequestMethod.POST)
+    public ResponseEntity<?> getAllClaimsFromToken(@RequestHeader(value = "X-Authorization") String access_token,
+            @RequestBody Map<String, Object> data) throws Exception {
+        String username = (data.get("username") == null ? "" : (String) data.get("username"));
+
+        if (access_token.startsWith("Bearer")) {
+            access_token = access_token.substring(7);
+        }
+        System.out.println(access_token);
+        Claims claims = jwtTokenUtil.getAllClaimsFromToken(access_token);
+        System.out.println(claims.getExpiration());
+
+        if (!username.equals(""))
+            return ResponseEntity.ok(jwtTokenUtil.getAllClaimsFromToken(access_token));
+        else
+            throw new UsernameNotFoundException("Need an username");
     }
 
     // 신규 사용자를 등록한다.

@@ -13,8 +13,8 @@
       <v-toolbar-title>Oracle Korea Developer Meetup</v-toolbar-title>
     </div>
     <v-spacer></v-spacer>
-    <v-icon left @click="loginAdminForm">mdi-login-variant</v-icon>
-    <v-icon left @click="logoutAdmin">mdi-logout-variant</v-icon>
+    <v-icon left @click="loginAdminForm">mdi-login</v-icon>
+    <v-icon left @click="logoutAdmin">mdi-logout</v-icon>
     <v-img
       src="/assets/img/oracle_logo3.png"
       class="shrink mr-2"
@@ -58,6 +58,8 @@
   </v-app-bar>
 </template>
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "Header",
   props: ["role", "passwd"],
@@ -73,9 +75,26 @@ export default {
     ]
   }),
   created() {
-    /* eslint-disable no-console */
-    this.setAdminMode();
-    //console.log("access_code : " + $store.state.access_code);
+    // this.$store.watch(
+    //   (state, getters) => getters.getTokenExpiresIn,
+    //   (newValue, oldValue) => {
+    //     /* eslint-disable no-console */
+    //     //console.log(`Updating from ${oldValue} to ${newValue}`); // eslint-disable-line no-unused-vars
+    //     // Do whatever makes sense now
+    //     if (newValue === 2500) {
+    //       console.log(newValue);
+    //     }
+    //   }
+    // );
+
+    // vuex store watch....
+    this.$store.watch(function(state) {
+      /* eslint-disable no-console */
+      console.log(state.expires_in);
+    });
+  },
+  mounted() {
+    //this.$store.dispatch("setJwtExpiresIn");
   },
   methods: {
     loginAdminForm() {
@@ -128,11 +147,11 @@ export default {
             this.adminAlertErrmsg = result.errorMessage;
           } else {
             // 성공
-            sessionStorage.setItem("access_token", result.data.access_token);
-            sessionStorage.setItem("refresh_token", result.data.refresh_token);
-            sessionStorage.setItem("expires_in", result.data.expires_in);
 
-            this.$store.commit("loginToken");
+            this.$store.commit("loginToken", result.data);
+            this.$store.dispatch("getAllClaimsFromToken", this.adminUsername);
+            this.$store.dispatch("setJwtExpiresIn");
+
             this.loginAdminDialog = false; //close this dialog
           }
         })
@@ -143,19 +162,12 @@ export default {
     },
     logoutAdmin() {
       this.$store.commit("delToken");
+      this.$store.dispatch("destroySetJwtExpiresInScheduler");
 
-      this.adminMode = false;
       this.loginAdminDialog = false; //close this dialog
-    },
-    setAdminMode() {
-      if (
-        sessionStorage.getItem("access_token") == "" ||
-        sessionStorage.getItem("access_token") == null
-      )
-        this.adminMode = false;
-      else this.adminMode = true;
     }
-  }
+  },
+  computed: mapState(["expires_in"]) //이와 같이 매핑을 하면  {{ expires_in }} 이렇게 사용할 수 있다.
 };
 </script>
 

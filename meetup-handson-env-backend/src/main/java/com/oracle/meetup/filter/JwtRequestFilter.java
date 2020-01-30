@@ -22,6 +22,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+    public static final String JWT_TOKEN_HEADER_PARAM = "X-Authorization";
+
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
@@ -30,7 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        final String requestTokenHeader = request.getHeader("Authorization");
+        final String requestTokenHeader = request.getHeader(JWT_TOKEN_HEADER_PARAM);
         String username = null;
         String jwtToken = null;
         // JWT Token is in the form "Bearer token". Remove Bearer word and get
