@@ -1269,3 +1269,7 @@ java.lang.Exception: Sorry... Already username taken
 31-01-2020 15:19:50.392 [http-nio-8000-exec-6] WARN  c.o.meetup.filter.JwtRequestFilter.doFilterInternal - JWT Token does not begin with Bearer String
 31-01-2020 15:19:59.696 [http-nio-8000-exec-9] WARN  c.o.meetup.filter.JwtRequestFilter.doFilterInternal - JWT Token does not begin with Bearer String
 31-01-2020 15:20:17.098 [http-nio-8000-exec-2] WARN  c.o.meetup.filter.JwtRequestFilter.doFilterInternal - JWT Token does not begin with Bearer String
+31-01-2020 16:47:38.256 [SpringContextShutdownHook] INFO  o.s.s.c.ThreadPoolTaskExecutor.shutdown - Shutting down ExecutorService 'applicationTaskExecutor'
+31-01-2020 16:47:38.257 [SpringContextShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean.destroy - Closing JPA EntityManagerFactory for persistence unit 'default'
+31-01-2020 16:47:38.258 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource.close - HikariPool-12 - Shutdown initiated...
+31-01-2020 16:47:38.668 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource.close - HikariPool-12 - Shutdown completed.

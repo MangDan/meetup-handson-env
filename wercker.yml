@@ -97,7 +97,7 @@ deploy-to-cluster:
           echo $PATH
           export PATH=$PATH:/root/bin
           mkdir -p ~/.kube
-          oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.ap-seoul-1.aaaaaaaaae3dmmtbmi4tkodgmq3dimjygjrdmy3fgfrgkzjymc3wmzjvmq2d --file $HOME/.kube/config --region ap-seoul-1 --token-version 2.0.0
+          $OCICLI_GET_KEY_COMMAND
           export KUBECONFIG=~/.kube/config
     - kubectl:
         name: delete secret

@@ -139,9 +139,9 @@ export default {
     _this.$store.watch(function(state) {
       /* eslint-disable no-console */
       if (
-        state.expires_in === 50 ||
-        state.expires_in === 20 ||
-        state.expires_in === 10
+        state.expires_in === 600 ||
+        state.expires_in === 300 ||
+        state.expires_in === 60
       ) {
         if (_this.refreshTokenDialog == false) _this.refreshTokenDialog = true;
       }
