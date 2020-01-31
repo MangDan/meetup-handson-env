@@ -20,10 +20,10 @@ Provide a hands-on environment for attendants.
 ![](images/search_environment-1.png)
 
 신청한 실습 환경 조회 결과 (카드 타입)
-![](images/search_environment-1.png)
+![](images/request_environment-2.png)
 
 신청한 실습 환경 조회 결과 (리스트 타입)
-![](images/search_environment-list.png)
+![](images/request_environment-list.png)
 
 접속 가이드
 ![](images/guides.png)
