@@ -14,7 +14,8 @@
     </div>
     <v-spacer></v-spacer>
     <v-icon left @click="loginAdminForm">mdi-login</v-icon>
-    <v-icon left @click="logoutAdmin">mdi-logout</v-icon>
+    <v-icon left v-if="this.adminMode" @click="logoutDialog = true">mdi-logout</v-icon>
+
     <v-img
       src="/assets/img/oracle_logo3.png"
       class="shrink mr-2"
@@ -26,7 +27,7 @@
     <v-dialog v-model="loginAdminDialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">Admin Login</span>
+          <span class="headline">{{this.adminMode ? "You are Already Logged in" : "Admin Login"}}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -48,13 +49,55 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="blue darken-1" text @click="loginAdmin">Login</v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :disabled="this.adminMode ? true : false"
+            @click="loginAdmin"
+          >Login</v-btn>
           <v-btn color="blue darken-1" text @click="registerAdmin">Register</v-btn>
           <v-btn color="blue darken-1" text @click="loginAdminDialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- Admin Login Dialog -->
+    <!-- RefreshToken Dialog -->
+    <v-dialog v-model="refreshTokenDialog" max-width="500px">
+      <v-card>
+        <v-card-title>Refresh Token</v-card-title>
+        <v-card-text>
+          <v-alert
+            border="right"
+            colored-border
+            type="error"
+            elevation="2"
+            v-html="refreshTokenDialogMsg"
+          ></v-alert>
+        </v-card-text>
+        <v-alert type="error" v-model="refreshTokenAlert" dismissible>
+          <h3 class="title">Oops!</h3>
+          <div v-text="refreshTokenAlertErrmsg"></div>
+        </v-alert>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="refreshToken">Refresh</v-btn>
+          <v-btn color="primary" text @click="refreshTokenDialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- RefreshToken Dialog -->
+    <!-- Logout Dialog -->
+    <v-dialog v-model="logoutDialog" max-width="500px">
+      <v-card>
+        <v-card-title>Refresh Token</v-card-title>
+        <v-card-text>로그아웃 하시겠습니까?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="logoutAdmin">Logout</v-btn>
+          <v-btn color="primary" text @click="logoutDialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- Logout Dialog -->
   </v-app-bar>
 </template>
 <script>
@@ -69,6 +112,11 @@ export default {
     adminAlertErrmsg: "",
     adminUsername: "meetuporclkr@oracle.com",
     adminPassword: "welcome1",
+    refreshTokenDialog: false,
+    refreshTokenDialogMsg: "",
+    refreshTokenAlert: false,
+    refreshTokenAlertErrmsg: "",
+    logoutDialog: false,
     emailRules: [
       v => !!v || "E-mail is required",
       v => /.+@.+\..+/.test(v) || "E-mail must be valid"
@@ -86,15 +134,31 @@ export default {
     //     }
     //   }
     // );
-
     // vuex store watch....
-    this.$store.watch(function(state) {
+    var _this = this;
+    _this.$store.watch(function(state) {
       /* eslint-disable no-console */
-      console.log(state.expires_in);
+      if (
+        state.expires_in === 50 ||
+        state.expires_in === 20 ||
+        state.expires_in === 10
+      ) {
+        if (_this.refreshTokenDialog == false) _this.refreshTokenDialog = true;
+      }
+
+      if (state.expires_in <= 0) {
+        _this.refreshTokenDialogMsg =
+          "토큰이 만료되었습니다. 토큰을 재발급 받으시겠습니까?";
+      } else {
+        _this.refreshTokenDialogMsg =
+          "<font color='red'>" +
+          state.expires_in +
+          "</font>초 후에 토큰이 만료됩니다. 토큰을 재발급 받으시겠습니까?";
+      }
     });
   },
   mounted() {
-    //this.$store.dispatch("setJwtExpiresIn");
+    this.$store.dispatch("setJwtExpiresIn");
   },
   methods: {
     loginAdminForm() {
@@ -164,10 +228,51 @@ export default {
       this.$store.commit("delToken");
       this.$store.dispatch("destroySetJwtExpiresInScheduler");
 
-      this.loginAdminDialog = false; //close this dialog
+      this.logoutDialog = false; //close this dialog
+    },
+    refreshToken() {
+      let data = {
+        username: this.adminUsername,
+        refresh_token: this.$store.state.refresh_token
+      };
+
+      this.$axios({
+        method: "post",
+        url: "/api/auth/token",
+        data: data,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(result => {
+          if (result.data.errorCode != "00") {
+            // 토큰 발행 오류
+            this.refreshTokenAlert = true;
+            this.refreshTokenAlertErrmsg = result.errorMessage;
+          } else {
+            // 성공
+
+            this.$store.commit("loginToken", result.data);
+            this.$store.dispatch("getAllClaimsFromToken", this.adminUsername);
+            this.$store.dispatch("setJwtExpiresIn");
+
+            this.refreshTokenDialog = false; //close this dialog
+          }
+        })
+        .catch(error => {
+          this.refreshTokenAlert = true;
+          this.refreshTokenAlertErrmsg = error.response.data.message;
+        });
     }
   },
-  computed: mapState(["expires_in"]) //이와 같이 매핑을 하면  {{ expires_in }} 이렇게 사용할 수 있다.
+  computed: {
+    ...mapState(["expires_in"]),
+    adminMode() {
+      //console.log("adminMode");
+      if (this.$store.state.expires_in > 0) return true;
+      else return false;
+    }
+  } //이와 같이 매핑을 하면  {{ expires_in }} 이렇게 사용할 수 있다.
 };
 </script>
 

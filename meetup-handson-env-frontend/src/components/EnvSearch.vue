@@ -10,7 +10,7 @@
           <v-icon left>mdi-note-text</v-icon>실습환경 접속방법
         </v-chip>
         <v-chip
-          v-if="$store.state.access_token"
+          v-if="$store.state.expires_in > 0"
           class="ma-2"
           color="deep-purple accent-4"
           outlined
@@ -50,10 +50,11 @@
                 ></v-text-field>
                 <v-spacer></v-spacer>
                 <v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
-                <v-alert type="error" v-model="alert" dismissible>
+                <v-alert dense outlined type="error" v-model="alert" dismissible>
                   <h3 class="title">Oops!</h3>
                   <div v-text="errmsg"></div>
                 </v-alert>
+
                 <div class="text-right">
                   <v-btn rounded color="primary" @click="searchEnvFromForm">Search</v-btn>
                   <!-- <v-btn
@@ -697,12 +698,12 @@ export default {
         url: "/api/v1/admin/meetup/env/reset",
         data: data,
         headers: {
-          "X-Authorization": "Bearer " + sessionStorage.getItem("access_token"),
+          "X-Authorization": "Bearer " + this.$store.state.access_token,
           "Content-Type": "application/json"
         }
       })
         .then(result => {
-          console.log(result.data);
+          //console.log(result.data);
 
           this.$EventBus.$emit("initialize", result.data);
 
@@ -769,7 +770,7 @@ export default {
         url: "/api/v1/admin/meetup/env/reset",
         data: this.editedItem,
         headers: {
-          "X-Authorization": "Bearer " + sessionStorage.getItem("access_token"),
+          "X-Authorization": "Bearer " + this.$store.state.access_token,
           "Content-Type": "application/json"
         }
       })
@@ -795,7 +796,7 @@ export default {
         url: "/api/v1/admin/meetup/env/reset",
         data: item,
         headers: {
-          "X-Authorization": "Bearer " + sessionStorage.getItem("access_token"),
+          "X-Authorization": "Bearer " + this.$store.state.access_token,
           "Content-Type": "application/json"
         }
       })

@@ -42,7 +42,7 @@ export default new Vuex.Store({
       if (state.access_token)
         state.access_token = null;
       if (state.refresh_token)
-        state.refresh_token = null;
+        state.expires_in = null;
       if (state.expiration)
         state.expiration = null;
     },
@@ -84,7 +84,9 @@ export default new Vuex.Store({
     },
     setJwtExpiresIn(context) {
       var intervalId = setInterval(() => {
-        context.commit('setJwtExpiresIn', context.state.expiration - Math.floor(new Date().getTime() / 1000))
+        let expires_in = (context.state.expiration - Math.floor(new Date().getTime() / 1000) < 0 ? "" : context.state.expiration - Math.floor(new Date().getTime() / 1000));
+
+        context.commit('setJwtExpiresIn', expires_in)
       }, 1000)
 
       context.commit("setIntervalId", intervalId);

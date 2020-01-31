@@ -41,10 +41,9 @@
                 </v-row>
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
-                    <v-alert type="error" v-model="alert" dismissible>
+                    <v-alert dense outlined type="error" v-model="alert" dismissible>
                       <h3 class="title">Oops!</h3>
                       <div v-text="errmsg1"></div>
-
                       <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
 
                       <v-row align="center" no-gutters>

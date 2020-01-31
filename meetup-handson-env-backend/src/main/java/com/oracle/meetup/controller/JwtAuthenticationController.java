@@ -99,23 +99,40 @@ public class JwtAuthenticationController {
         Optional<RefreshTokenDAO> verifiedRefreshTokenDAO = refreshTokenRepository
                 .findByUsernameAndRefreshToken(username, refreshToken);
 
-        if (verifiedRefreshTokenDAO.isPresent()) {
-            // 토크 생성
-            //
-            access_token = jwtTokenUtil.generateToken(verifiedRefreshTokenDAO.get().getUsername());
-            refresh_token = jwtTokenUtil.generateRefreshToken(verifiedRefreshTokenDAO.get().getUsername());
-            expires_in = jwtTokenUtil.getExpiresIn(access_token);
+        try {
+            if (verifiedRefreshTokenDAO.isPresent()) {
+                // 토크 생성
+                //
+                access_token = jwtTokenUtil.generateToken(verifiedRefreshTokenDAO.get().getUsername());
+                refresh_token = jwtTokenUtil.generateRefreshToken(verifiedRefreshTokenDAO.get().getUsername());
+                expires_in = jwtTokenUtil.getExpiresIn(access_token);
+            }
+
+            if (refresh_token != null && !refresh_token.isEmpty()) {
+                // Save refresh_token to Database
+
+                RefreshTokenDAO refreshTokenDAO = new RefreshTokenDAO();
+                refreshTokenDAO.setUsername(verifiedRefreshTokenDAO.get().getUsername());
+                refreshTokenDAO.setRefreshToken(refresh_token);
+                refreshTokenRepository.save(refreshTokenDAO);
+            } else {
+                throw new BadCredentialsException("INVALID_CREDENTIALS");
+            }
+        } catch (DisabledException e) {
+            errorCode = "107";
+            errorMessage = "USER_DISABLED";
+        } catch (BadCredentialsException e) {
+            errorCode = "107";
+            errorMessage = "INVALID_CREDENTIALS";
+        } catch (UsernameNotFoundException unfe) {
+            errorCode = "99";
+            errorMessage = unfe.getMessage();
+        } catch (Exception e) {
+            errorCode = "502";
+            errorMessage = e.getMessage();
         }
 
-        if (refresh_token != null && !refresh_token.isEmpty()) {
-            // Save refresh_token to Database
-
-            RefreshTokenDAO refreshTokenDAO = new RefreshTokenDAO();
-            refreshTokenDAO.setUsername(verifiedRefreshTokenDAO.get().getUsername());
-            refreshTokenDAO.setRefreshToken(refresh_token);
-            refreshTokenRepository.save(refreshTokenDAO);
-        }
-
+        // 00 성공, 107 파라미터 오류, 502 accessToken 발급 오류, 99 알수 없는 오류
         return ResponseEntity.ok(new JwtResponse(access_token, refresh_token, expires_in, errorCode, errorMessage));
     }
 
