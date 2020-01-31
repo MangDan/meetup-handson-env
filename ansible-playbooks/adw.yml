@@ -1,0 +1,42 @@
+---
+# Create Autonomous Data Warehouse
+- name: Autonomous Data Warehouse Module
+  connection: local
+  hosts: localhost
+  tasks:
+    - name: Create Autonomous Data Warehouse
+      oci_autonomous_data_warehouse:
+        compartment_id: '{{ compartment_id }}'
+        admin_password: 'WelCome123##'
+        data_storage_size_in_tbs: 1
+        cpu_core_count: 2
+        db_name: 'ansible-adw'
+        display_name: 'ansible-adw'
+        license_model: 'LICENSE_INCLUDED'
+        freeform_tags:
+          owner: 'dan.donghu.kim@gmail.com'
+        wait: False
+        state: 'present'
+      register: result
+      tags:
+        - create_adw
+    # Delete Autonomous Data Warehouse
+    - name: Delete Autonomous Data Warehouse
+      oci_autonomous_data_warehouse:
+        autonomous_data_warehouse_id: '{{ adw_id }}'
+        state: 'absent'
+      register: result
+      tags:
+        - delete_adw
+    - name: Get Aunonomous Data Warehouse details of compartment
+      oci_autonomous_data_warehouse_facts:
+        compartment_id: '{{ compartment_id }}'
+      register: result
+      tags:
+        - get_adw_details
+    # Print ADW instance result
+    - name: Print ADW instance result
+      debug:
+        msg: '{{ result }}'
+      tags:
+        - always

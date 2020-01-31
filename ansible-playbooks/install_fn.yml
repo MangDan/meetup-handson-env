@@ -1,0 +1,9 @@
+- name: Download fn project
+  uri: 
+    url: https://raw.githubusercontent.com/fnproject/cli/master/install
+    method: GET
+    mode: +x
+    dest: /home/opc/fn_install.sh
+- name: Install fn project
+  shell: /home/opc/fn_install.sh
+  become: no

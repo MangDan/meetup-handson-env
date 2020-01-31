@@ -1,0 +1,82 @@
+- name: Create .oci directory
+  file:
+    path: /home/{{ item.os_user }}/.oci
+    state: directory
+    owner: "{{ item.os_user }}"
+    group: handson
+  with_items: "{{ users }}"
+  tags:
+    - create_oci_dir 
+- name: Upload private rsa key(pem) file
+  copy:
+    src: ~/.oci/oci_api_key.pem
+    dest: /home/{{ item.os_user }}/.oci
+    owner: "{{ item.os_user }}"
+    group: handson
+    mode: '0600'
+  with_items: "{{ users }}"
+  tags:
+    - upload_private_pem_file
+- name: Upload public rsa key(pem) file
+  copy:
+    src: ~/.oci/oci_api_key_public.pem
+    dest: /home/{{ item.os_user }}/.oci
+    owner: "{{ item.os_user }}"
+    group: handson
+    mode: '0600'
+  with_items: "{{ users }}"
+  tags:
+    - upload_public_pem_file
+- name: Upload private rsa key(der) file
+  copy:
+    src: ~/.ssh/id_rsa
+    dest: /home/{{ item.os_user }}/.ssh
+    owner: "{{ item.os_user }}"
+    group: handson
+    mode: '0600'
+  with_items: "{{ users }}"
+  tags:
+    - upload_private_der_file
+- name: Upload public rsa key(der) file
+  copy:
+    src: ~/.ssh/id_rsa.pub
+    dest: /home/{{ item.os_user }}/.ssh
+    owner: "{{ item.os_user }}"
+    group: handson
+    mode: '0600'
+  with_items: "{{ users }}"
+  tags:
+    - upload_public_der_file
+- name: Delete oci config file
+  file:
+    path: /home/{{ item.os_user }}/.oci/config
+    state: absent
+  with_items: "{{ users }}"
+  tags:
+    - delete_oci_config
+- name: Create oci config file
+  file:
+    path: /home/{{ item.os_user }}/.oci/config
+    state: touch
+    owner: "{{ item.os_user }}"
+    group: handson
+  with_items: "{{ users }}"
+  tags:
+    - create_oci_config
+- name: Append oci config
+  blockinfile:
+    path: /home/{{ item.os_user }}/.oci/config
+    marker: "# oci config file"
+    state: present
+    block: |
+      [DEFAULT]
+      tenancy={{ item.tenancy }}
+      user={{ item.user }}
+      key_file={{ item.key_file }}
+      fingerprint={{ item.fingerprint }}
+      region={{ item.region }}
+#debug:
+#  msg: "debug {{ item.key }} - {{ item.value }}"
+  with_items: "{{ users }}"
+  tags:
+    - append_oci_config

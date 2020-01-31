@@ -1,0 +1,62 @@
+---
+users:
+  - os_user: user1
+    tenancy: ocid1.tenancy.oc1..aaaaaaaajjthwmzb76n42uvqsjaj5zyeydau6q2b2fbspriqhtrddft2rstq
+    user: ocid1.user.oc1..aaaaaaaaeiimxdyiw3dha3xgvnnpmwejvx7gzcx5gskvg3ger2rhsadnfgeq
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user2
+    tenancy: ocid1.tenancy.oc1..aaaaaaaaze3ti44c2biw2k3tjaus3ysda2afsh5poxikwy5h275q3ko5c65a
+    user: ocid1.user.oc1..aaaaaaaauhuz3pscefqz3evcr5szvdcsens7ggbaatt3p3mtmkf3emaj4uqa
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user3
+    tenancy: ocid1.tenancy.oc1..aaaaaaaaztgpetgphaavz4gmanprmypa3qhs4ze5gouapx42n2ydy3sbzpfq
+    user: ocid1.user.oc1..aaaaaaaapu6o3vnnkn35o37deliovfopeq5z3q5mclg7obgfzrldwmnyleyq
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user4
+    tenancy: ocid1.tenancy.oc1..aaaaaaaajz6jzy253tdxryekbfoo7xsxhs5utgnkju2hlhpaxve5xtbm3gca
+    user: ocid1.user.oc1..aaaaaaaapnovcrajb4qqnz2vdahtms4zozpbf4uk44zqetr6hjiolmhw7tkq
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user5
+    tenancy: ocid1.tenancy.oc1..aaaaaaaaalf7llui3whxjgzkyylexfevzdb4rqsdajdelqjsxu4q2oobemdq
+    user: ocid1.user.oc1..aaaaaaaav4kry2ua54he7sy3fgd3ldb23mx4pnu5rhvjby7hxxwmdlytfhcq
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user6
+    tenancy: ocid1.tenancy.oc1..aaaaaaaaj4gvspltpe4nz6bvctdrg63ctmmohmfbuzxfxtkrozb5dc6l2exq
+    user: ocid1.user.oc1..aaaaaaaaxib3g7nl2pi6ltedzsgq2vc4jgwjt3st4x2pawiimm3nkco6hdva
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user7
+    tenancy: ocid1.tenancy.oc1..aaaaaaaaqoerp6tbbakf7onz5bnsqgqen5bgbfhthps5kuksaryh2s6ji2pa
+    user: ocid1.user.oc1..aaaaaaaap7f6ug3glq7rdvvvvacj7xzzf47hpwyw2h3x7gvlrb477a6bxr6a
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user8
+    tenancy: ocid1.tenancy.oc1..aaaaaaaalil566uvqs6lboo5yxaqtve2hizokbpt7efsjshhuul55rvhylzq
+    user: ocid1.user.oc1..aaaaaaaaharv7vqsqm7hvaobk33w6lutmrzrmnpszeyjlzcv6okku4izuigq
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user9
+    tenancy: ocid1.tenancy.oc1..aaaaaaaazjtcynexl7wq4w6ggmmy4z6hd5c2et5sa6gbdrlkvdoyag6nibfa
+    user: ocid1.user.oc1..aaaaaaaalagsngabuw4rwg5djiy3ebamh3ibwun2dctdmxj4wpc2bltevg6q
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1
+  - os_user: user10
+    tenancy: ocid1.tenancy.oc1..aaaaaaaadjgfpvzrtiv7adlm6wwzopqwm4ylgcupky4ns5sethf7hwopjtyq
+    user: ocid1.user.oc1..aaaaaaaa2haoe4akbtutzyilhmnr2dk4ipxqkw2tj5pru4sucacsvhzngpdq
+    key_file: ~/.oci/oci_api_key.pem
+    fingerprint: 48:1a:98:8c:cd:f6:63:4b:fb:4d:8d:26:44:aa:37:f6
+    region: ap-seoul-1

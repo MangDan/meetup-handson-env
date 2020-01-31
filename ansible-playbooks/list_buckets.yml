@@ -1,0 +1,55 @@
+---
+# Copyright (c) 2018, 2019 Oracle and/or its affiliates.
+# This software is made available to you under the terms of the GPL 3.0 license or the Apache 2.0 license.
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Apache License v2.0
+# See LICENSE.TXT for details.
+
+- name: List objects from all the buckets
+  hosts: localhost
+  vars:
+    # common vars
+    sample_bucket_name: "test"
+    sample_object_name: "testAnsible_HOL.pdf"
+
+    #########################################
+    # Tenancy specific configuration
+    # *Note* - Override the following variables based on your tenancy
+    # or set a valid value for the corresponding environment variable 
+    #########################################
+    compartment_id: "{{ lookup('env', '') }}"
+    namespace_name: "{{ lookup('env', '') }}"
+
+  tasks:
+    - name: Get all the buckets in the namespace
+      oci_bucket_facts:
+        namespace_name: "cnskp0nacmov"
+        compartment_id: "ocid1.tenancy.oc1..aaaaaaaaczntdhqaqsnfxfykqymelumoplqe5d6amg7ecsaykku6ukiwc37q"
+      register: ocibuckets
+
+    - name: Get all objects from all the buckets
+      oci_object_facts:
+        namespace: "{{ namespace_name }}"
+        bucket: "{{ item.name }}"
+      with_items: "{{ ocibuckets.buckets }}"
+      register: output
+    - name: Print objects list
+      debug:
+        msg: 'Bucket: {{item.item.name}}, Objects: {{item.objects}}'
+      loop: "{{output.results}}"
+      loop_control:
+        label: "{{item.item.name}}"
+
+#     The above variable, output, contains key "results" which is a list of result of individual invocation through
+#     with_items. Each result has "item" key that has the bucket's details and the "objects" key that contains all the
+#     objects within that bucket:
+#      output:
+#      {
+#       results:
+#        [
+#          {
+#            item:{},
+#            objects: []
+#          }
+#        ]
+#      }

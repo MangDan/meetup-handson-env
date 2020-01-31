@@ -1,0 +1,44 @@
+---
+- import_playbook: os_users.yml
+- name: Create OCI config file
+  hosts: all
+  remote_user: opc
+  become_method: sudo
+  become: yes
+  gather_facts: no
+  vars_files:
+    - data/{{ inventory_hostname }}-tenancies.yml
+  tasks:
+    - name: Install maven
+      include: install_maven.yml
+      tags:
+        - install_maven
+    - name: Install git
+      include: install_git.yml
+      tags:
+        - install_git
+    - name: Install docker
+      include: install_docker.yml
+      tags:
+        - install_docker
+    - name: Enable SSH Connection
+      include: enable_ssh_connection.yml
+      tags:
+        - enable_ssh_connection
+    # Issue related to python
+    # - name: Install oci-cli
+    #   include: install_ocicli.yml
+    #   tags:
+    #     - install_ocicli
+    - name: Install fn
+      include: install_fn.yml
+      tags:
+        - install_fn
+    - name: Make OCI Config file
+      include: make_oci_config.yml
+      tags:
+        - make_oci_config
+    # - name: Install pip & virtualenv
+    #   include: install_pip_virtualenv.yml
+    # - name: Make Terraform Env file
+    #   include: make_terraform_env.yml

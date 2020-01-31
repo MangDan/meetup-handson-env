@@ -1,0 +1,18 @@
+- name: Download oci-cli
+  uri: 
+    url: https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh
+    method: GET
+    mode: +x
+    dest: /home/opc/oci_install.sh
+- name: Install oci-cli
+  expect:
+    command: /home/opc/oci_install.sh
+    responses:
+      Question:
+        - ''
+        - ''
+        - ''
+        - ''
+        - 'Y'
+        - ''
+  become: no

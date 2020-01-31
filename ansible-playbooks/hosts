@@ -1,0 +1,4 @@
+[handson]
+handson-1 ansible_host=132.145.82.236 ansible_connection=ssh ansible_user=opc ansible_ssh_private_key_file=~/.ssh/id_rsa
+handson-2 ansible_host=140.238.13.70 ansible_connection=ssh ansible_user=opc ansible_ssh_private_key_file=~/.ssh/id_rsa
+handson-3 ansible_host=140.238.18.54 ansible_connection=ssh ansible_user=opc ansible_ssh_private_key_file=~/.ssh/id_rsa

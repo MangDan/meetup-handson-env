@@ -1,0 +1,6 @@
+#Fetch all existing users
+- name: List all existing users
+  hosts: dan-compartment-1072
+  tasks:
+    - name: List User facts
+      oci_user_facts:

@@ -1,0 +1,169 @@
+11111
+111111
+11111
+before list_call_get_all_results
+11111
+before list_call_get_all_results
+22222
+before list_call_get_all_results
+after list_call_get_all_results
+before list_call_get_all_results
+after list_call_get_all_results
+before list_call_get_all_results
+after list_call_get_all_results
+33333
+11111
+before list_call_get_all_results
+before list_call_get_all_results
+before list_call_get_all_results
+after list_call_get_all_results
+before list_call_get_all_results
+before list_call_get_all_results
+after list_call_get_all_results
+before list_call_get_all_results
+after list_call_get_all_results
+before list_call_get_all_results
+after list_call_get_all_results
+PROFILE=DEFAULT
+before list_call_get_all_results
+after list_call_get_all_results
+PROFILE=DEFAULT
+before list_call_get_all_results
+PROFILE=DEFAULT
+before list_call_get_all_results
+PROFILE=DEFAULT
+before list_call_get_all_results
+PROFILE=DEFAULT
+before list_call_get_all_results
+PROFILE=DANOCI
+before list_call_get_all_results
+after list_call_get_all_results
+PROFILE=DANOCI
+before list_call_get_all_results
+after list_call_get_all_results
+PROFILE=DEFAULT
+before list_call_get_all_results
+CONFIG_FILE=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+CONFIG_FILE=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+CONFIG_FILE=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+CONFIG_FILE=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+CONFIG_FILE=~/.oci/config
+PROFILE=DEFAULT
+start default config
+end default config
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+before oci.config.from_file
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+after oci.config.from_file
+before list_call_get_all_results
+before oci.config.from_file
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+after oci.config.from_file
+before list_call_get_all_results
+before oci.config.from_file
+~/.oci/config
+DEFAULT
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+after oci.config.from_file
+before list_call_get_all_results
+before oci.config.from_file
+~/.oci/config
+DEFAULT
+LOCATIONR=~/.oci/config
+PROFILE=DANOCI
+after oci.config.from_file
+before list_call_get_all_results
+after list_call_get_all_results
+before oci.config.from_file
+~/.oci/config
+DEFAULT
+LOCATIONR=~/.oci/config
+PROFILE=DANOCI
+after oci.config.from_file
+before list_call_get_all_results
+after list_call_get_all_results
+config_file.....
+None
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+config_file.....
+None
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+before get_oci_config
+config_file.....
+None
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+config_file.....
+None
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+config_file.....
+None
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results
+before get_oci_config................
+config_file.....
+None
+LOCATIONR=~/.oci/config
+PROFILE=DEFAULT
+before list_call_get_all_results

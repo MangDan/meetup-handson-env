@@ -1,0 +1,13 @@
+- name: Remove .ssh directory
+  file:
+    path: /home/{{ item.os_user }}/.ssh
+    state: absent
+  with_items: "{{ users }}"
+- name: Enable ssh connection
+  copy:
+    src: /home/opc/.ssh
+    dest: /home/{{ item.os_user }}
+    remote_src: yes
+    owner: "{{ item.os_user }}"
+    group: "{{ group }}"
+  with_items: "{{ users }}"

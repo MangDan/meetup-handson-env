@@ -1,0 +1,34 @@
+---
+# Compartment Module
+ - name: Compartment Module
+   connection: local
+   hosts: localhost
+   tasks:
+     - name: Create a compartment
+       oci_compartment:
+         parent_compartment_id: '{{ tenancy_id }}'
+         name: ansible_compartment 
+         description: Compartment for Ansible handson 
+       register: result
+       tags:
+         - create_compartment
+     - name: Delete compartment
+       oci_compartment:
+         compartment_id: '{{ compartment_id }}'
+         state: absent
+       register: result
+       tags:
+         - delete_compartment
+     - name: Get details of a root compartment
+       oci_compartment_facts:
+         compartment_id: '{{ tenancy_id }}'
+         name: '{{ compartment_name }}'
+         fetch_subcompartments: True 
+       register: result
+       tags:
+         - get_compartments
+     - name: Print result
+       debug:
+         msg: '{{ result }}'
+       tags:
+         - always

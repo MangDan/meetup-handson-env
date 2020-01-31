@@ -1,0 +1,63 @@
+- name: User Playbook
+  hosts: all 
+  remote_user: opc
+  become_method: sudo
+  become: yes
+  vars_files:
+    - data/{{ inventory_hostname }}-tenancies.yml
+  tasks:
+    - name: Add users
+      user:
+        name: "{{ item.os_user }}"
+        shell: /bin/bash
+        group: handson
+        append: "{{ append }}"
+        state: present
+      with_items: "{{ users }}"
+      tags:
+        - add_users 
+    - name: Remove users
+      user:
+        name: "{{ item.os_user }}"
+        state: absent 
+        remove: "{{ remove }}" 
+      become: true
+      with_items: "{{ users }}"
+      tags:
+        - remove_users
+    - name: add multiple users with index
+      user:
+        name: "{{ item }}"
+        state: "present"
+        groups: "{{ group }}"
+      #with_sequence: start=0 end=10 format=user%d
+      with_sequence: count={{ count }} format={{ user_prefix }}%d
+      tags:
+        - add_multiple_users
+
+    - name: remove multiple users with index
+      user:
+        name: "{{ item }}"
+        state: absent
+        remove: yes 
+      #with_sequence: start=0 end=10 format=user%d
+      with_sequence: count={{ count }} format={{ user_prefix }}%d
+      become: true
+      tags:
+        - remove_multiple_users
+
+    - name: add group
+      group:
+        name: "{{ group }}"
+        state: present
+      become: true
+      tags:
+        - add_group
+    - name: remove group
+      group:
+        name: "{{ group }}"
+        state: absent
+      become: true
+      tags:
+        - remove_group
+

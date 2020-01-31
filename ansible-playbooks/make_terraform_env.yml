@@ -1,0 +1,53 @@
+- name: Create terraform directory
+  file:
+    path: /home/{{ item.os_user }}/.terraform/env
+    state: directory
+    recurse: yes
+    owner: "{{ item.os_user }}"
+    group: handson
+  with_items: "{{ users }}"
+  tags:
+    - create_terraform_dir 
+- name: Delete terraform folder
+  file:
+    path: /home/{{ item.os_user }}/.terraform
+    state: absent
+  with_items: "{{ users }}"
+  tags:
+    - delete_terraform_dir
+- name: Delete terraform env file
+  file:
+    path: /home/{{ item.os_user }}/.terraform/env/env.tfvars
+    state: absent
+  with_items: "{{ users }}"
+  tags:
+    - delete_terraform_env
+- name: Create terraform env file
+  file:
+    path: /home/{{ item.os_user }}/.terraform/env/env.tfvars
+    state: touch
+    owner: "{{ item.os_user }}"
+    group: handson
+  with_items: "{{ users }}"
+  tags:
+    - create_terraform_env
+- name: Append terraform env
+  blockinfile:
+    path: /home/{{ item.os_user }}/.terraform/env/env.tfvars
+    marker: "# terraform env file"
+    state: present
+    block: |
+      tenancy_ocid="{{ item.tenancy }}"
+      compartment_ocid=""
+      user_ocid=""
+      oci_user_ocid="{{ item.user }}"
+      fingerprint="{{ item.fingerprint }}"
+      private_key_path="~/.oci/oci_api_key.pem"
+      region="{{ item.region }}"
+      home_region="{{ item.region }}"
+      ssh_public_key="~/.ssh/id_rsa.pub"
+#debug:
+#  msg: "debug {{ item.key }} - {{ item.value }}"
+  with_items: "{{ users }}"
+  tags:
+    - append_terraform_env

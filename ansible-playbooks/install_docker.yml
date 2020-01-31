@@ -1,0 +1,15 @@
+- name: Install docker
+  yum:
+    name: docker-engine
+    state: latest
+- name: Start Docker service
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+- name: Add user* to docker group
+  user:
+    name: "{{ item.os_user }}"
+    groups: docker
+    append: yes
+  with_items: "{{ users }}"

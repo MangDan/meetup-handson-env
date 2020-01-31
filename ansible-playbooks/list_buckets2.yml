@@ -1,0 +1,14 @@
+---
+- name : List summary of existing buckets in OCI object storage
+  connection: local
+  hosts: localhost
+  tasks:
+    - name: List bucket facts
+      oci_bucket_facts:
+         namespace_name: 'cnskp0nacmov'
+         compartment_id: 'ocid1.compartment.oc1..aaaaaaaa2j3xh5vkzww3wp2vrrk6fihbtpbilf6k3olitwkrzoo42s5lb2sq'
+         config_profile_name: 'DANOCI'
+      register: result
+    - name: Dump result
+      debug: 
+        msg: '{{result}}'
