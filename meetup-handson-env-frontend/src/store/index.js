@@ -3,13 +3,13 @@ import Vuex from 'vuex'
 import axios from 'axios'
 
 Vue.use(Vuex)
-
+//JSON.parse(sessionStorage.getItem("claims"))
 export default new Vuex.Store({
   state: {
     access_token: sessionStorage.getItem("access_token"),
     refresh_token: sessionStorage.getItem("refresh_token"),
     expires_in: "",
-    expiration: sessionStorage.getItem("expiration"),
+    claims: JSON.parse(sessionStorage.getItem("claims")),
     intervalId: null
   },
   getters: {
@@ -18,16 +18,18 @@ export default new Vuex.Store({
     },
     getIntervalId(state) {
       return state.intervalId;
+    },
+    getClaims(state) {
+      return state.claims;
     }
   },
   mutations: {
     loginToken(state, data) {
       /* eslint-disable no-console */
-      //console.log("loginToken....");
+      //console.log(data);
 
       sessionStorage.setItem("access_token", data.access_token);
       sessionStorage.setItem("refresh_token", data.refresh_token);
-      sessionStorage.setItem("expiration", data.expiration);
 
       state.access_token = data.access_token;
       state.refresh_token = data.refresh_token;
@@ -38,16 +40,16 @@ export default new Vuex.Store({
       //console.log("delToken....");
       sessionStorage.removeItem('access_token');
       sessionStorage.removeItem('refresh_token');
-      sessionStorage.removeItem('expiration');
+      sessionStorage.removeItem('claims');
       if (state.access_token)
         state.access_token = null;
       if (state.refresh_token)
         state.expires_in = null;
-      if (state.expiration)
-        state.expiration = null;
+      if (state.claims)
+        state.claims = null;
     },
-    setExpiration(state, expiration) {
-      state.expiration = expiration;
+    setAllClaims(state, claims) {
+      state.claims = claims;
     },
     setJwtExpiresIn(state, expires_in) {
       state.expires_in = expires_in;
@@ -73,23 +75,24 @@ export default new Vuex.Store({
           }
         })
         .then(result => {
-          //console.log(result.data.exp - Math.floor(new Date().getTime() / 1000));
-
-          sessionStorage.setItem("expiration", result.data.exp);
-          context.commit("setExpiration", result.data.exp);
+          sessionStorage.setItem("claims", JSON.stringify(result.data));
+          context.commit("setAllClaims", result.data);
+          context.dispatch("setJwtExpiresIn");
         })
         .catch(error => {
           console.log(error);
         });
     },
     setJwtExpiresIn(context) {
-      var intervalId = setInterval(() => {
-        let expires_in = (context.state.expiration - Math.floor(new Date().getTime() / 1000) < 0 ? "" : context.state.expiration - Math.floor(new Date().getTime() / 1000));
+      if (context.state.claims.exp != undefined) {
+        var intervalId = setInterval(() => {
+          let expires_in = (context.state.claims.exp - Math.floor(new Date().getTime() / 1000) < 0 ? "" : context.state.claims.exp - Math.floor(new Date().getTime() / 1000));
+          context.commit('setJwtExpiresIn', expires_in)
+        }, 1000)
 
-        context.commit('setJwtExpiresIn', expires_in)
-      }, 1000)
+        context.commit("setIntervalId", intervalId);
+      }
 
-      context.commit("setIntervalId", intervalId);
     },
     destroySetJwtExpiresInScheduler(context) {
       clearInterval(context.getters.getIntervalId);

@@ -121,7 +121,7 @@
         :headers="envHeaders"
         :items="envs"
         :items-per-page="10"
-        sort-by="num"
+        :sort-by.sync="updateEnvSortBy"
         class="elevation-1"
       >
         <template v-slot:top>
@@ -129,7 +129,7 @@
             <v-toolbar-title>실습 환경 업데이트</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-dialog v-model="updateEnvFormDialog">
+            <v-dialog v-model="updateEnvFormDialog" @open="openEnvFormDialog">
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
                   <v-icon>mdi-plus-circle-outline</v-icon>
@@ -137,7 +137,7 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">실습 환경 업데이트</span>
+                  <span class="headline">실습 환경 {{ updateFormDialogTitle }}</span>
                 </v-card-title>
                 <v-card-text>
                   <v-container>
@@ -181,8 +181,8 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="closeUpdateEnvDialog">Cancel</v-btn>
                   <v-btn color="blue darken-1" text @click="updateEnv">Save</v-btn>
+                  <v-btn color="blue darken-1" text @click="closeUpdateEnvDialog">Cancel</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -463,7 +463,7 @@
         </template>
         <template v-slot:item.action="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
-          <v-icon small @click="deleteItem(item)">delete</v-icon>
+          <v-icon small @click="openDeleteDialog(item)">delete</v-icon>
         </template>
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -474,6 +474,19 @@
         <v-btn text @click="snack = false">Close</v-btn>
       </v-snackbar>
     </v-dialog>
+    <!-- Delete Item Dialog -->
+    <v-dialog v-model="deleteDialog" max-width="500px">
+      <v-card>
+        <v-card-title>Delete an environment</v-card-title>
+        <v-card-text>Are you sure you want to delete this environment?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="deleteItem">Delete</v-btn>
+          <v-btn color="primary" text @click="deleteDialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- Delete Item Dialog -->
   </div>
 </template>
   
@@ -491,7 +504,10 @@ export default {
     guideDialog: false,
     updateEnvDialog: false,
     updateEnvFormDialog: false,
+    deleteDialog: false,
+    updateEnvSortBy: "num",
     adminMode: true,
+    editMode: true,
     snack: false,
     snackColor: "",
     snackText: "",
@@ -609,7 +625,23 @@ export default {
       }.bind(this) // EventBus에서는 Event 안에 this는 자신이 된다. 따라서 바인딩할때 이와 같이 처리해줘야 한다.
     );
   },
-  computed: {},
+  computed: {
+    updateFormDialogTitle: function() {
+      if (this.editMode == true) return "업데이트";
+      else return "추가";
+    }
+  },
+  watch: {
+    updateEnvFormDialog: function(val) {
+      // `this` points to the vm instance
+      if (val == true) {
+        //editMode
+        if (this.editedItem.num != 0 || this.editedItem.num == null)
+          this.editMode = true;
+        else this.editMode = false;
+      }
+    }
+  },
   methods: {
     searchEnv(num) {
       this.alert = false;
@@ -747,13 +779,31 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.updateEnvFormDialog = true;
     },
-
-    deleteItem(item) {
-      const index = this.envs.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.envs.splice(index, 1);
+    openDeleteDialog(item) {
+      this.editedIndex = this.envs.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.deleteDialog = true;
     },
-
+    deleteItem() {
+      this.$axios({
+        method: "delete",
+        url: "/api/v1/admin/meetup/env/" + this.editedItem.num,
+        headers: {
+          "X-Authorization": "Bearer " + this.$store.state.access_token,
+          "Content-Type": "application/json"
+        }
+      })
+        .then(result => {
+          console.log(result);
+          this.envs.splice(this.editedIndex, 1);
+          this.deleteDialog = false;
+        })
+        .catch(error => {
+          this.snack = true;
+          this.snackColor = "error";
+          this.snackText = error.response.data.message;
+        });
+    },
     closeUpdateEnvDialog() {
       this.updateEnvFormDialog = false;
       setTimeout(() => {
@@ -763,7 +813,7 @@ export default {
     },
 
     updateEnv() {
-      //console.log(this.editedItem);
+      if (this.editMode == false) this.editedItem.num = null;
 
       this.$axios({
         method: "post",
@@ -779,7 +829,7 @@ export default {
           if (this.editedIndex > -1) {
             Object.assign(this.envs[this.editedIndex], this.editedItem);
           } else {
-            this.updateEnvFormDialog.push(this.editedItem);
+            this.envs.push(result.data);
           }
           this.closeUpdateEnvDialog();
         })
@@ -790,7 +840,6 @@ export default {
         });
     },
     updateColunm(item) {
-      console.log(item);
       this.$axios({
         method: "post",
         url: "/api/v1/admin/meetup/env/reset",
@@ -825,6 +874,9 @@ export default {
     },
     closeSaveColunm() {
       console.log("Dialog closed");
+    },
+    openEnvFormDialog() {
+      console.log("open form dialog...");
     }
   }
 };

@@ -4,10 +4,16 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+
 @Entity
+@DynamicInsert
 @Table(name = "MEETUP_HANDSON_ENV")
 public class HandsOnEnv implements Serializable {
     /**
@@ -16,6 +22,8 @@ public class HandsOnEnv implements Serializable {
     private static final long serialVersionUID = -3423961242822117508L;
 
     @Column(name = "NUM", updatable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "MEETUP_HANDSON_ENV_SEQ")
+    @SequenceGenerator(sequenceName = "MEETUP_HANDSON_ENV_SEQ", allocationSize = 1, name = "MEETUP_HANDSON_ENV_SEQ")
     @Id
     private int num;
 

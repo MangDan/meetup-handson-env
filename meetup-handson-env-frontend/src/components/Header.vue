@@ -10,7 +10,7 @@
           contain
         ></v-img>
       </a>
-      <v-toolbar-title>Oracle Korea Developer Meetup</v-toolbar-title>
+      <v-toolbar-title>Oracle Korea Developer Meetup {{ adminUsername }}</v-toolbar-title>
     </div>
     <v-spacer></v-spacer>
     <v-icon left @click="loginAdminForm">mdi-login</v-icon>
@@ -88,7 +88,7 @@
     <!-- Logout Dialog -->
     <v-dialog v-model="logoutDialog" max-width="500px">
       <v-card>
-        <v-card-title>Refresh Token</v-card-title>
+        <v-card-title>Logout</v-card-title>
         <v-card-text>로그아웃 하시겠습니까?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -214,7 +214,7 @@ export default {
 
             this.$store.commit("loginToken", result.data);
             this.$store.dispatch("getAllClaimsFromToken", this.adminUsername);
-            this.$store.dispatch("setJwtExpiresIn");
+            //this.$store.dispatch("setJwtExpiresIn");
 
             this.loginAdminDialog = false; //close this dialog
           }
@@ -232,7 +232,7 @@ export default {
     },
     refreshToken() {
       let data = {
-        username: this.adminUsername,
+        username: this.$store.state.claims.sub,
         refresh_token: this.$store.state.refresh_token
       };
 
@@ -253,8 +253,10 @@ export default {
             // 성공
 
             this.$store.commit("loginToken", result.data);
-            this.$store.dispatch("getAllClaimsFromToken", this.adminUsername);
-            this.$store.dispatch("setJwtExpiresIn");
+            this.$store.dispatch(
+              "getAllClaimsFromToken",
+              this.$store.state.claims.sub
+            );
 
             this.refreshTokenDialog = false; //close this dialog
           }
