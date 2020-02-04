@@ -52,10 +52,14 @@ public class HandsOnEnvController {
         }
     }
 
-    @PostMapping(value = "/api/v1/admin/meetup/env/remove")
-    public void removeEnv(@RequestBody HandsOnEnv handsOnEnv) throws Exception {
-        handsOnEnvRepository.deleteById(handsOnEnv.getNum());
+    @PostMapping(value = "/api/v1/admin/meetup/env/reset")
+    public HandsOnEnv resetEnv(@RequestBody HandsOnEnv handsOnEnv) throws Exception {
+        return handsOnEnvRepository.save(handsOnEnv);
     }
+    // @PostMapping(value = "/api/v1/admin/meetup/env/remove")
+    // public void removeEnv(@RequestBody HandsOnEnv handsOnEnv) throws Exception {
+    // handsOnEnvRepository.deleteById(handsOnEnv.getNum());
+    // }
 
     @RequestMapping(value = "/api/v1/admin/meetup/env/{num}", method = RequestMethod.DELETE)
     public void removeEnv(@PathVariable("num") int num) throws Exception {

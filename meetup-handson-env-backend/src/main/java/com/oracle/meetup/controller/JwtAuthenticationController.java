@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.oracle.meetup.auth.config.JwtTokenUtil;
-import com.oracle.meetup.dto.JwtRequest;
 import com.oracle.meetup.dto.JwtResponse;
 import com.oracle.meetup.dto.UserDTO;
 import com.oracle.meetup.jpa.RefreshTokenRepository;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 public class JwtAuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -38,11 +37,14 @@ public class JwtAuthenticationController {
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
-    // 여기서 한가지 빠진 부분이 있다. Refresh Token의 유효기간이 2일이지만, 만일 사용자가 2일동안 브라우저를 닫지 않고 대기하고
-    // 있는 상태라면...
+    /**
+     * Issue or Todo Refresh Token의 유효기간이 2일이지만, 만일 사용자가 2일동안 브라우저를 닫지 않고 대기하고 있는
+     * 상태라면,
+     * 
+     */
     // 최초 로그인 시 Access Token과 Refresh Token을 발급 받는다.
     @RequestMapping(value = "/api/auth/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDTO authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 

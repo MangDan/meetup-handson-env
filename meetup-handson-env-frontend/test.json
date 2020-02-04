@@ -1,0 +1,14 @@
+{
+    "num": 3,
+    "osuser": "user3",
+    "username": "홍길동",
+    "email": "gildong.hong@oracle.com",
+    "tenant": "meetup103",
+    "region": "ap-seoul-1",
+    "cloud_account": "datatwin2020@gmail.com",
+    "cloud_account_pw": "Welcome123##",
+    "handson_doc_url": "https://github.com/MangDan/meetup-200118-iac",
+    "key_download_url": "https://objectstorage.ap-seoul-1.oraclecloud.com/p/q5QvhgdGpV5hakDgZXzjS-acLFR8oa3knciiVSS8CPg/n/apackrsct01/b/bucket-20190614-1639/o/sshkeys.zip",
+    "env_ip": "132.145.82.236",
+    "env_name": "handson-1"
+}
