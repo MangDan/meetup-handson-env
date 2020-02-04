@@ -10,7 +10,7 @@
           contain
         ></v-img>
       </a>
-      <v-toolbar-title>Oracle Korea Developer Meetup {{ adminUsername }}</v-toolbar-title>
+      <v-toolbar-title>Oracle Korea Developer Meetup</v-toolbar-title>
     </div>
     <v-spacer></v-spacer>
     <v-icon left @click="loginAdminForm">mdi-login</v-icon>
@@ -61,7 +61,7 @@
       </v-card>
     </v-dialog>
     <!-- RefreshToken Dialog -->
-    <v-dialog v-model="refreshTokenDialog" max-width="500px">
+    <v-dialog v-model="refreshTokenDialog" persistent max-width="500px">
       <v-card>
         <v-card-title>Refresh Token</v-card-title>
         <v-card-text>
@@ -139,21 +139,16 @@ export default {
     _this.$store.watch(function(state) {
       /* eslint-disable no-console */
       if (
-        state.expires_in === 600 ||
-        state.expires_in === 300 ||
-        state.expires_in === 60
+        state.expires_in === 600 || //10m
+        state.expires_in === 300 || //5m
+        state.expires_in === 60 //1m
       ) {
-        if (_this.refreshTokenDialog == false) _this.refreshTokenDialog = true;
-      }
-
-      if (state.expires_in <= 0) {
-        _this.refreshTokenDialogMsg =
-          "토큰이 만료되었습니다. 토큰을 재발급 받으시겠습니까?";
-      } else {
         _this.refreshTokenDialogMsg =
           "<font color='red'>" +
           state.expires_in +
           "</font>초 후에 토큰이 만료됩니다. 토큰을 재발급 받으시겠습니까?";
+
+        if (_this.refreshTokenDialog == false) _this.refreshTokenDialog = true;
       }
     });
   },
@@ -181,9 +176,19 @@ export default {
         }
       })
         .then(result => {
-          /* eslint-disable no-console */
-          console.log(result);
-          this.loginAdminDialog = false; //close this dialog
+          if (result.data.errorCode != "00") {
+            // 토큰 발행 오류
+            this.adminAlert = true;
+            this.adminAlertErrmsg = result.errorMessage;
+          } else {
+            // 성공
+
+            this.$store.commit("loginToken", result.data);
+            this.$store.dispatch("getAllClaimsFromToken", this.adminUsername);
+            //this.$store.dispatch("setJwtExpiresIn");
+
+            this.loginAdminDialog = false; //close this dialog
+          }
         })
         .catch(error => {
           this.adminAlert = true;

@@ -84,7 +84,7 @@ export default new Vuex.Store({
         });
     },
     setJwtExpiresIn(context) {
-      if (context.state.claims.exp != undefined) {
+      if (context.state.claims != null && context.state.claims.exp != undefined) {
         var intervalId = setInterval(() => {
           let expires_in = (context.state.claims.exp - Math.floor(new Date().getTime() / 1000) < 0 ? "" : context.state.claims.exp - Math.floor(new Date().getTime() / 1000));
           context.commit('setJwtExpiresIn', expires_in)

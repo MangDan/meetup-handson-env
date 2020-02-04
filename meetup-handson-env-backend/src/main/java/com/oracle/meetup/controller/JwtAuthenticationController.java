@@ -9,15 +9,13 @@ import com.oracle.meetup.dto.JwtResponse;
 import com.oracle.meetup.dto.UserDTO;
 import com.oracle.meetup.jpa.RefreshTokenRepository;
 import com.oracle.meetup.repository.entity.RefreshTokenDAO;
+import com.oracle.meetup.service.JwtAuthenticationService;
 import com.oracle.meetup.service.JwtUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.jsonwebtoken.Claims;
 
 @RestController
 @CrossOrigin
@@ -38,60 +34,26 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
     @Autowired
+    private JwtAuthenticationService jwtAuthenticationService;
+    @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
+    // 여기서 한가지 빠진 부분이 있다. Refresh Token의 유효기간이 2일이지만, 만일 사용자가 2일동안 브라우저를 닫지 않고 대기하고
+    // 있는 상태라면...
     // 최초 로그인 시 Access Token과 Refresh Token을 발급 받는다.
     @RequestMapping(value = "/api/auth/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        UserDetails userDetails = null;
-        String access_token = null;
-        String refresh_token = null;
-        String expires_in = null;
-        String errorCode = "00"; // success
-        String errorMessage = "SUCCESS";
-        try {
-            authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-            userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-            access_token = jwtTokenUtil.generateToken(userDetails);
-            expires_in = jwtTokenUtil.getExpiresIn(access_token);
-            refresh_token = jwtTokenUtil.generateRefreshToken(userDetails);
+        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
-            if (refresh_token != null && !refresh_token.isEmpty()) {
-                // Save refresh_token to Database
-
-                RefreshTokenDAO refreshTokenDAO = new RefreshTokenDAO();
-                refreshTokenDAO.setUsername(authenticationRequest.getUsername());
-                refreshTokenDAO.setRefreshToken(refresh_token);
-                refreshTokenRepository.save(refreshTokenDAO);
-            }
-        } catch (DisabledException e) {
-            errorCode = "107";
-            errorMessage = "USER_DISABLED";
-        } catch (BadCredentialsException e) {
-            errorCode = "107";
-            errorMessage = "INVALID_CREDENTIALS";
-        } catch (UsernameNotFoundException unfe) {
-            errorCode = "99";
-            errorMessage = unfe.getMessage();
-        } catch (Exception e) {
-            errorCode = "502";
-            errorMessage = e.getMessage();
-        }
-
-        // 00 성공, 107 파라미터 오류, 502 accessToken 발급 오류, 99 알수 없는 오류
-        return ResponseEntity.ok(new JwtResponse(access_token, refresh_token, expires_in, errorCode, errorMessage));
+        return ResponseEntity.ok(jwtAuthenticationService.getTokens(authenticationRequest.getUsername()));
     }
 
-    // Access Token이 만료되었을 경우 Refresh Token을 활용하여 신규 Access Token과 Refresh Token을 재
-    // 발급한다.
+    // Access Token이 만료되었을 경우 Refresh Token을 활용하여 신규 Access Token과 Refresh Token을
+    // 재발급한다.
     @RequestMapping(value = "/api/auth/token", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationTokenByRefreshToken(@RequestBody Map<String, Object> data)
             throws Exception {
-        String access_token = null;
-        String refresh_token = null;
-        String expires_in = null;
-        String errorCode = "00"; // success
-        String errorMessage = "SUCCESS";
 
         String username = (data.get("username") == null ? "" : (String) data.get("username"));
         String refreshToken = (data.get("refresh_token") == null ? "" : (String) data.get("refresh_token"));
@@ -99,41 +61,11 @@ public class JwtAuthenticationController {
         Optional<RefreshTokenDAO> verifiedRefreshTokenDAO = refreshTokenRepository
                 .findByUsernameAndRefreshToken(username, refreshToken);
 
-        try {
-            if (verifiedRefreshTokenDAO.isPresent()) {
-                // 토크 생성
-                //
-                access_token = jwtTokenUtil.generateToken(verifiedRefreshTokenDAO.get().getUsername());
-                refresh_token = jwtTokenUtil.generateRefreshToken(verifiedRefreshTokenDAO.get().getUsername());
-                expires_in = jwtTokenUtil.getExpiresIn(access_token);
-            }
-
-            if (refresh_token != null && !refresh_token.isEmpty()) {
-                // Save refresh_token to Database
-
-                RefreshTokenDAO refreshTokenDAO = new RefreshTokenDAO();
-                refreshTokenDAO.setUsername(verifiedRefreshTokenDAO.get().getUsername());
-                refreshTokenDAO.setRefreshToken(refresh_token);
-                refreshTokenRepository.save(refreshTokenDAO);
-            } else {
-                throw new BadCredentialsException("INVALID_CREDENTIALS");
-            }
-        } catch (DisabledException e) {
-            errorCode = "107";
-            errorMessage = "USER_DISABLED";
-        } catch (BadCredentialsException e) {
-            errorCode = "107";
-            errorMessage = "INVALID_CREDENTIALS";
-        } catch (UsernameNotFoundException unfe) {
-            errorCode = "99";
-            errorMessage = unfe.getMessage();
-        } catch (Exception e) {
-            errorCode = "502";
-            errorMessage = e.getMessage();
+        if (verifiedRefreshTokenDAO.isPresent()) {
+            return ResponseEntity.ok(jwtAuthenticationService.getTokens(verifiedRefreshTokenDAO.get().getUsername()));
+        } else {
+            return ResponseEntity.ok(new JwtResponse(null, null, null, "502", "INVALID_REFRESH_TOKEN"));
         }
-
-        // 00 성공, 107 파라미터 오류, 502 accessToken 발급 오류, 99 알수 없는 오류
-        return ResponseEntity.ok(new JwtResponse(access_token, refresh_token, expires_in, errorCode, errorMessage));
     }
 
     @RequestMapping(value = "/api/auth/claims", method = RequestMethod.POST)
@@ -144,14 +76,13 @@ public class JwtAuthenticationController {
         if (access_token.startsWith("Bearer")) {
             access_token = access_token.substring(7);
         }
-        System.out.println(access_token);
-        Claims claims = jwtTokenUtil.getAllClaimsFromToken(access_token);
-        System.out.println(claims.getExpiration());
+
+        // Claims claims = jwtTokenUtil.getAllClaimsFromToken(access_token);
 
         if (!username.equals(""))
             return ResponseEntity.ok(jwtTokenUtil.getAllClaimsFromToken(access_token));
         else
-            throw new UsernameNotFoundException("Need an username");
+            throw new UsernameNotFoundException("Username not found!!!");
     }
 
     // 신규 사용자를 등록한다.
@@ -161,12 +92,12 @@ public class JwtAuthenticationController {
         long userCount = userDetailsService.userCount(user.getUsername());
 
         if (userCount > 0) {
-            throw new Exception("Sorry... Already username taken");
+            throw new Exception("Sorry... Already username taken!");
         }
-        return ResponseEntity.ok(userDetailsService.save(user));
-    }
 
-    // 로그아웃할 경우 서버의 Refresh Token과 클라이언트의 Access Token을 삭제한다.
+        userDetailsService.save(user);
+        return ResponseEntity.ok(jwtAuthenticationService.getTokens(user.getUsername()));
+    }
 
     // 인증
     private void authenticate(String username, String password) throws Exception {

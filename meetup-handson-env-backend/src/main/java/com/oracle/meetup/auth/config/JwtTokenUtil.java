@@ -17,9 +17,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
-    public static final long JWT_TOKEN_VALIDITY = 1 * (60 * 60); // 1 hours
-    // public static final long JWT_TOKEN_VALIDITY = 60; // 1 min
-    public static final long JWT_REFRESH_TOKEN_VALIDITY = 14 * (60 * 60 * 24); // 2 weeks
+    // public static final long JWT_TOKEN_VALIDITY = 1 * (30 * 60); // 30m
+    public static final long JWT_TOKEN_VALIDITY = 10; // 1 min
+    public static final long JWT_REFRESH_TOKEN_VALIDITY = 2 * (60 * 60 * 24); // 2 days
 
     @Value("${jwt.secret}")
     private String secret;
