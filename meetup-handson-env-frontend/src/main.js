@@ -6,7 +6,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://140.238.20.170:8000'
+axios.defaults.baseURL = process.env.VUE_APP_BACKEND_SVC_URL
 //axios.defaults.baseURL = 'http://localhost:8000'
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.get["Content-Type"] = "application/json";
