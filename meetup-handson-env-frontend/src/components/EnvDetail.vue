@@ -9,7 +9,7 @@
     >
       <span>Copied</span>
     </v-tooltip>
-    <v-container v-if="this.listType=='card'" fluid class="pt-0">
+    <v-container v-if="this.listType == 'card'" fluid class="pt-0">
       <v-row>
         <v-col cols="12" sm="6" md="6" class="pa-1">
           <v-card class="mx-auto" outlined tile>
@@ -17,7 +17,7 @@
               <v-list-item-content>
                 <v-list-item-title disabled>신청자</v-list-item-title>
                 <v-list-item-subtitle>
-                  <kbd>{{env.username}}</kbd>
+                  <kbd>{{ env.username }}</kbd>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-icon>
@@ -34,12 +34,14 @@
               <v-list-item-content>
                 <v-list-item-title disabled>신청자 이메일</v-list-item-title>
                 <v-list-item-subtitle>
-                  <kbd>{{env.email}}</kbd>
+                  <kbd>{{ env.email }}</kbd>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-icon>
                 <v-btn icon>
-                  <v-icon @click="copy(env.email, $event)">mdi-content-copy</v-icon>
+                  <v-icon @click="copy(env.email, $event)"
+                    >mdi-content-copy</v-icon
+                  >
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -53,12 +55,14 @@
               <v-list-item-content>
                 <v-list-item-title disabled>OS(linux) 계정</v-list-item-title>
                 <v-list-item-subtitle>
-                  <kbd>{{env.osuser}}</kbd>
+                  <kbd>{{ env.osuser }}</kbd>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-icon>
                 <v-btn icon>
-                  <v-icon @click="copy(env.osuser, $event)">mdi-content-copy</v-icon>
+                  <v-icon @click="copy(env.osuser, $event)"
+                    >mdi-content-copy</v-icon
+                  >
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -68,7 +72,9 @@
           <v-card class="mx-auto" outlined tile>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title disabled>OS(linux) 접속 SSH KEY</v-list-item-title>
+                <v-list-item-title disabled
+                  >OS(linux) 접속 SSH KEY</v-list-item-title
+                >
                 <v-list-item-subtitle>
                   <kbd>
                     <a :href="env.key_download_url">
@@ -79,7 +85,9 @@
               </v-list-item-content>
               <v-list-item-icon>
                 <v-btn icon>
-                  <v-icon @click="copy(env.key_download_url, $event)">mdi-content-copy</v-icon>
+                  <v-icon @click="copy(env.key_download_url, $event)"
+                    >mdi-content-copy</v-icon
+                  >
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -94,7 +102,7 @@
               <v-list-item-content>
                 <v-list-item-title disabled>실습 환경 IP</v-list-item-title>
                 <v-list-item-subtitle>
-                  <kbd>{{env.env_ip}}</kbd>
+                  <kbd>{{ env.env_ip }}</kbd>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-icon>
@@ -109,14 +117,18 @@
           <v-card class="mx-auto" outlined tile>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title disabled>클라우드 테넌트(Tenant)</v-list-item-title>
+                <v-list-item-title disabled
+                  >클라우드 테넌트(Tenant)</v-list-item-title
+                >
                 <v-list-item-subtitle>
-                  <kbd>{{env.tenant}}</kbd>
+                  <kbd>{{ env.tenant }}</kbd>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-icon>
                 <v-btn icon>
-                  <v-icon @click="copy(env.tenant, $event)">mdi-content-copy</v-icon>
+                  <v-icon @click="copy(env.tenant, $event)"
+                    >mdi-content-copy</v-icon
+                  >
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -129,14 +141,18 @@
           <v-card class="mx-auto" outlined tile>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title disabled>오라클 클라우드 계정</v-list-item-title>
+                <v-list-item-title disabled
+                  >오라클 클라우드 계정</v-list-item-title
+                >
                 <v-list-item-subtitle>
-                  <kbd>{{env.cloud_account}}</kbd>
+                  <kbd>{{ env.cloud_account }}</kbd>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-icon>
                 <v-btn icon>
-                  <v-icon @click="copy(env.cloud_account, $event)">mdi-content-copy</v-icon>
+                  <v-icon @click="copy(env.cloud_account, $event)"
+                    >mdi-content-copy</v-icon
+                  >
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -146,14 +162,18 @@
           <v-card class="mx-auto" outlined tile>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title disabled>오라클 클라우드 계정 패스워드</v-list-item-title>
+                <v-list-item-title disabled
+                  >오라클 클라우드 계정 패스워드</v-list-item-title
+                >
                 <v-list-item-subtitle>
-                  <kbd>{{env.cloud_account_pw}}</kbd>
+                  <kbd>{{ env.cloud_account_pw }}</kbd>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-icon>
                 <v-btn icon>
-                  <v-icon @click="copy(env.cloud_account_pw, $event)">mdi-content-copy</v-icon>
+                  <v-icon @click="copy(env.cloud_account_pw, $event)"
+                    >mdi-content-copy</v-icon
+                  >
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -165,13 +185,26 @@
           <v-card class="mx-auto" outlined tile>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title disabled>오라클 클라우드 접속 주소 ({{env.region}})</v-list-item-title>
+                <v-list-item-title disabled
+                  >오라클 클라우드 접속 주소 ({{
+                    env.region
+                  }})</v-list-item-title
+                >
                 <v-list-item-subtitle>
                   <kbd>
-                    <a :href="'https://console.'+env.region+'.oraclecloud.com?tenant='+env.tenant">
-                      <font
-                        color="white"
-                      >https://console.{{env.region}}.oraclecloud.com?tenant={{env.tenant}}</font>
+                    <a
+                      :href="
+                        'https://console.' +
+                          env.region +
+                          '.oraclecloud.com?tenant=' +
+                          env.tenant
+                      "
+                    >
+                      <font color="white"
+                        >https://console.{{
+                          env.region
+                        }}.oraclecloud.com?tenant={{ env.tenant }}</font
+                      >
                     </a>
                   </kbd>
                 </v-list-item-subtitle>
@@ -179,8 +212,17 @@
               <v-list-item-icon>
                 <v-btn icon>
                   <v-icon
-                    @click="copy('https://console.'+env.region+'.oraclecloud.com?tenant='+env.tenant, $event)"
-                  >mdi-content-copy</v-icon>
+                    @click="
+                      copy(
+                        'https://console.' +
+                          env.region +
+                          '.oraclecloud.com?tenant=' +
+                          env.tenant,
+                        $event
+                      )
+                    "
+                    >mdi-content-copy</v-icon
+                  >
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -192,18 +234,22 @@
           <v-card class="mx-auto" outlined tile>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title disabled>실습 문서 및 소스</v-list-item-title>
+                <v-list-item-title disabled
+                  >실습 문서 및 소스</v-list-item-title
+                >
                 <v-list-item-subtitle>
                   <kbd>
                     <a :href="env.handson_doc_url">
-                      <font color="white">{{env.handson_doc_url}}</font>
+                      <font color="white">{{ env.handson_doc_url }}</font>
                     </a>
                   </kbd>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-icon>
                 <v-btn icon>
-                  <v-icon @click="copy(env.handson_doc_url, $event)">mdi-content-copy</v-icon>
+                  <v-icon @click="copy(env.handson_doc_url, $event)"
+                    >mdi-content-copy</v-icon
+                  >
                 </v-btn>
               </v-list-item-icon>
             </v-list-item>
@@ -211,18 +257,20 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container v-else-if="this.listType=='list'" fluid class="pt-0">
+    <v-container v-else-if="this.listType == 'list'" fluid class="pt-0">
       <v-list dense two-line height="470px" style="overflow-y:auto">
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title disabled>신청자</v-list-item-title>
             <v-list-item-subtitle>
-              <kbd>{{env.username}}</kbd>
+              <kbd>{{ env.username }}</kbd>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon>
             <v-btn icon>
-              <v-icon @click="copy(env.username, $event)">mdi-content-copy</v-icon>
+              <v-icon @click="copy(env.username, $event)"
+                >mdi-content-copy</v-icon
+              >
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
@@ -231,7 +279,7 @@
           <v-list-item-content>
             <v-list-item-title disabled>신청자 이메일</v-list-item-title>
             <v-list-item-subtitle>
-              <kbd>{{env.email}}</kbd>
+              <kbd>{{ env.email }}</kbd>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon>
@@ -245,19 +293,23 @@
           <v-list-item-content>
             <v-list-item-title disabled>OS(linux) 계정</v-list-item-title>
             <v-list-item-subtitle>
-              <kbd>{{env.osuser}}</kbd>
+              <kbd>{{ env.osuser }}</kbd>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon>
             <v-btn icon>
-              <v-icon @click="copy(env.osuser, $event)">mdi-content-copy</v-icon>
+              <v-icon @click="copy(env.osuser, $event)"
+                >mdi-content-copy</v-icon
+              >
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title disabled>OS(linux) 접속 SSH KEY</v-list-item-title>
+            <v-list-item-title disabled
+              >OS(linux) 접속 SSH KEY</v-list-item-title
+            >
             <v-list-item-subtitle>
               <kbd>
                 <a :href="env.key_download_url">
@@ -268,7 +320,9 @@
           </v-list-item-content>
           <v-list-item-icon>
             <v-btn icon>
-              <v-icon @click="copy(env.key_download_url, $event)">mdi-content-copy</v-icon>
+              <v-icon @click="copy(env.key_download_url, $event)"
+                >mdi-content-copy</v-icon
+              >
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
@@ -277,7 +331,7 @@
           <v-list-item-content>
             <v-list-item-title disabled>실습 환경 IP</v-list-item-title>
             <v-list-item-subtitle>
-              <kbd>{{env.env_ip}}</kbd>
+              <kbd>{{ env.env_ip }}</kbd>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon>
@@ -289,14 +343,18 @@
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title disabled>클라우드 테넌트(Tenant)</v-list-item-title>
+            <v-list-item-title disabled
+              >클라우드 테넌트(Tenant)</v-list-item-title
+            >
             <v-list-item-subtitle>
-              <kbd>{{env.tenant}}</kbd>
+              <kbd>{{ env.tenant }}</kbd>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon>
             <v-btn icon>
-              <v-icon @click="copy(env.tenant, $event)">mdi-content-copy</v-icon>
+              <v-icon @click="copy(env.tenant, $event)"
+                >mdi-content-copy</v-icon
+              >
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
@@ -305,39 +363,56 @@
           <v-list-item-content>
             <v-list-item-title disabled>오라클 클라우드 계정</v-list-item-title>
             <v-list-item-subtitle>
-              <kbd>{{env.cloud_account}}</kbd>
+              <kbd>{{ env.cloud_account }}</kbd>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon>
             <v-btn icon>
-              <v-icon @click="copy(env.cloud_account, $event)">mdi-content-copy</v-icon>
+              <v-icon @click="copy(env.cloud_account, $event)"
+                >mdi-content-copy</v-icon
+              >
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title disabled>오라클 클라우드 계정 패스워드</v-list-item-title>
+            <v-list-item-title disabled
+              >오라클 클라우드 계정 패스워드</v-list-item-title
+            >
             <v-list-item-subtitle>
-              <kbd>{{env.cloud_account_pw}}</kbd>
+              <kbd>{{ env.cloud_account_pw }}</kbd>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon>
             <v-btn icon>
-              <v-icon @click="copy(env.cloud_account_pw, $event)">mdi-content-copy</v-icon>
+              <v-icon @click="copy(env.cloud_account_pw, $event)"
+                >mdi-content-copy</v-icon
+              >
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title disabled>오라클 클라우드 접속 주소 ({{env.region}})</v-list-item-title>
+            <v-list-item-title disabled
+              >오라클 클라우드 접속 주소 ({{ env.region }})</v-list-item-title
+            >
             <v-list-item-subtitle>
               <kbd>
-                <a :href="'https://console.'+env.region+'.oraclecloud.com?tenant='+env.tenant">
-                  <font
-                    color="white"
-                  >https://console.{{env.region}}.oraclecloud.com?tenant={{env.tenant}}</font>
+                <a
+                  :href="
+                    'https://console.' +
+                      env.region +
+                      '.oraclecloud.com?tenant=' +
+                      env.tenant
+                  "
+                >
+                  <font color="white"
+                    >https://console.{{ env.region }}.oraclecloud.com?tenant={{
+                      env.tenant
+                    }}</font
+                  >
                 </a>
               </kbd>
             </v-list-item-subtitle>
@@ -345,8 +420,17 @@
           <v-list-item-icon>
             <v-btn icon>
               <v-icon
-                @click="copy('https://console.'+env.region+'.oraclecloud.com?tenant='+env.tenant, $event)"
-              >mdi-content-copy</v-icon>
+                @click="
+                  copy(
+                    'https://console.' +
+                      env.region +
+                      '.oraclecloud.com?tenant=' +
+                      env.tenant,
+                    $event
+                  )
+                "
+                >mdi-content-copy</v-icon
+              >
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
@@ -357,14 +441,16 @@
             <v-list-item-subtitle>
               <kbd>
                 <a :href="env.handson_doc_url">
-                  <font color="white">{{env.handson_doc_url}}</font>
+                  <font color="white">{{ env.handson_doc_url }}</font>
                 </a>
               </kbd>
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon>
             <v-btn icon>
-              <v-icon @click="copy(env.handson_doc_url, $event)">mdi-content-copy</v-icon>
+              <v-icon @click="copy(env.handson_doc_url, $event)"
+                >mdi-content-copy</v-icon
+              >
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
@@ -450,5 +536,3 @@ export default {
   }
 };
 </script>
-
-
