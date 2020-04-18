@@ -104,14 +104,14 @@ deploy-to-cluster:
         server: $KUBERNETES_MASTER
         #        token: $KUBERNETES_AUTH_TOKEN
         insecure-skip-tls-verify: true
-        command: delete secret wercker; echo delete registry secret
+        command: delete secret wercker -n $NAMESPACE; echo delete registry secret
 
     - kubectl:
         name: create secret
         server: $KUBERNETES_MASTER
         #        token: $KUBERNETES_AUTH_TOKEN
         insecure-skip-tls-verify: true
-        command: create secret docker-registry wercker --docker-server=$DOCKER_REGISTRY --docker-email=nobody@oracle.com --docker-username=$DOCKER_USERNAME --docker-password='$OCI_AUTH_TOKEN'; echo create registry secret
+        command: create secret docker-registry wercker --docker-server=$DOCKER_REGISTRY --docker-email=nobody@oracle.com --docker-username=$DOCKER_USERNAME --docker-password='$OCI_AUTH_TOKEN' -n $NAMESPACE; echo create registry secret
     - script:
         name: "Visualise Kubernetes config"
         code: cat kube-meetup-handson-env-backend-config.yml
@@ -121,7 +121,7 @@ deploy-to-cluster:
         server: $KUBERNETES_MASTER
         #        token: $KUBERNETES_AUTH_TOKEN
         insecure-skip-tls-verify: true
-        command: apply -f kube-meetup-handson-env-backend-config.yml
+        command: apply -f kube-meetup-handson-env-backend-config.yml -n $NAMESPACE
 
     - script:
         name: "Visualise Kubernetes config"
@@ -132,4 +132,4 @@ deploy-to-cluster:
         server: $KUBERNETES_MASTER
         #        token: $KUBERNETES_AUTH_TOKEN
         insecure-skip-tls-verify: true
-        command: apply -f kube-meetup-handson-env-frontend-config.yml
+        command: apply -f kube-meetup-handson-env-frontend-config.yml -n $NAMESPACE
