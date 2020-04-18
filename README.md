@@ -1,15 +1,18 @@
 # Oracle Korea Meetup HandsOn Environments
+
 Provide a hands-on environment for attendants.
 
 ---
 
 ## This application built using.
-* Vuejs + Vuetify + Vuex for frontend
-* JWT (JJWT Library) for authentication
-* Spring Boot + JPA for business logic
-* Oracle Database for data store
+
+- Vuejs + Vuetify + Vuex for frontend
+- JWT (JJWT Library) for authentication
+- Spring Boot + JPA for business logic
+- Oracle Database for data store
 
 ## Screenshots
+
 홈
 ![](images/home.png)
 
@@ -39,5 +42,3 @@ Provide a hands-on environment for attendants.
 
 실습 환경 업데이트 (로우 단위)
 ![](images/env_update_row.png)
-
-
