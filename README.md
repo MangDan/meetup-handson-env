@@ -13,7 +13,7 @@ Provide a hands-on environment for attendants.
 
 ## Screenshots
 
-홈
+홈 i
 ![](images/home.png)
 
 실습 환경 신청
