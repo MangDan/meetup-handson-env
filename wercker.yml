@@ -57,20 +57,26 @@ deploy-to-cluster:
 
   steps:
   - bash-template
+
+  - kubectl:
+      name: create namespace
+      server: $KUBERNETES_MASTER
+      token: $KUBERNETES_AUTH_TOKEN
+      insecure-skip-tls-verify: true
+      command: create namespace $NAMESPACE; echo delete registry secret
   - kubectl:
       name: delete secret
       server: $KUBERNETES_MASTER
       token: $KUBERNETES_AUTH_TOKEN
       insecure-skip-tls-verify: true
       command: delete secret wercker -n $NAMESPACE; echo delete registry secret
-
   - kubectl:
       name: create secret
       server: $KUBERNETES_MASTER
       token: $KUBERNETES_AUTH_TOKEN
       insecure-skip-tls-verify: true
       command: create secret docker-registry wercker --docker-server=$DOCKER_REGISTRY --docker-email=nobody@oracle.com --docker-username=$DOCKER_USERNAME --docker-password='$OCI_AUTH_TOKEN' -n $NAMESPACE; echo create registry secret
-  - script:
+  - script: 
       name: "Visualise Kubernetes config"
       code: cat kube-meetup-handson-env-backend-config.yml
 
