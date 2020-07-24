@@ -50,86 +50,44 @@ meetup-handson-env-frontend-push:
 
 #Deploy our container from the Oracle Container Registry to the Oracle Container Engine (Kubernetes)
 deploy-to-cluster:
+  deploy-to-cluster:
   box:
-    id: debian:stable-slim
-  #    cmd: /bin/sh
+      id: alpine
+      cmd: /bin/sh
+
   steps:
-    - bash-template
-    # - damith/wercker-oke-token-v2@3.14.4:
-    #     tenancy: $TENANCY_OCID
-    #     user: $USER_OCID
-    #     region: $REGION
-    #     private_key: $PRIVATE_KEY
-    #     fingerprint: $FINGERPRINT
-    - shellcheck
+  - bash-template
+  - kubectl:
+      name: delete secret
+      server: $KUBERNETES_MASTER
+      token: $KUBERNETES_AUTH_TOKEN
+      insecure-skip-tls-verify: true
+      command: delete secret wercker -n $NAMESPACE; echo delete registry secret
 
-    - install-packages:
-        packages: curl
-    - script:
-        name: install oci cli
-        code: |
-          curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh > install.sh
-          chmod +x install.sh
-          ./install.sh --accept-all-defaults
-          rm -Rf ~/.oci
-          mkdir ~/.oci
-          cat > ~/.oci/config << EOF
-          [DEFAULT]
-          user=$USER_OCID
-          fingerprint=$FINGERPRINT
-          key_file=~/.oci/$PRIVATE_KEY
-          tenancy=$TENANCY_OCID
-          region=$REGION
-          EOF
+  - kubectl:
+      name: create secret
+      server: $KUBERNETES_MASTER
+      token: $KUBERNETES_AUTH_TOKEN
+      insecure-skip-tls-verify: true
+      command: create secret docker-registry wercker --docker-server=$DOCKER_REGISTRY --docker-email=nobody@oracle.com --docker-username=$DOCKER_USERNAME --docker-password='$OCI_AUTH_TOKEN' -n $NAMESPACE; echo create registry secret
+  - script:
+      name: "Visualise Kubernetes config"
+      code: cat kube-meetup-handson-env-backend-config.yml
 
-    - script:
-        name: "Visualise OCI config"
-        code: cat ~/.oci/config
-    - script:
-        name: copy private key
-        code: |
-          cp $PRIVATE_KEY ~/.oci
-          chmod go-rwx ~/.oci/$PRIVATE_KEY
-          ls -lart ~/.oci
-    - script:
-        name: create kubeconfig
-        code: |
-          echo $PATH
-          export PATH=$PATH:/root/bin
-          mkdir -p ~/.kube
-          $OCICLI_GET_KEY_COMMAND
-          export KUBECONFIG=~/.kube/config
-    - kubectl:
-        name: delete secret
-        server: $KUBERNETES_MASTER
-        #        token: $KUBERNETES_AUTH_TOKEN
-        insecure-skip-tls-verify: true
-        command: delete secret wercker -n $NAMESPACE; echo delete registry secret
+  - kubectl:
+      name: deploy meetup-handson-env-backend service to kubernetes
+      server: $KUBERNETES_MASTER
+      token: $KUBERNETES_AUTH_TOKEN
+      insecure-skip-tls-verify: true
+      command: apply -f kube-meetup-handson-env-backend-config.yml -n $NAMESPACE
 
-    - kubectl:
-        name: create secret
-        server: $KUBERNETES_MASTER
-        #        token: $KUBERNETES_AUTH_TOKEN
-        insecure-skip-tls-verify: true
-        command: create secret docker-registry wercker --docker-server=$DOCKER_REGISTRY --docker-email=nobody@oracle.com --docker-username=$DOCKER_USERNAME --docker-password='$OCI_AUTH_TOKEN' -n $NAMESPACE; echo create registry secret
-    - script:
-        name: "Visualise Kubernetes config"
-        code: cat kube-meetup-handson-env-backend-config.yml
+  - script:
+      name: "Visualise Kubernetes config"
+      code: cat kube-meetup-handson-env-frontend-config.yml
 
-    - kubectl:
-        name: deploy meetup-handson-env-backend service to kubernetes
-        server: $KUBERNETES_MASTER
-        #        token: $KUBERNETES_AUTH_TOKEN
-        insecure-skip-tls-verify: true
-        command: apply -f kube-meetup-handson-env-backend-config.yml -n $NAMESPACE
-
-    - script:
-        name: "Visualise Kubernetes config"
-        code: cat kube-meetup-handson-env-frontend-config.yml
-
-    - kubectl:
-        name: deploy kube-meetup-handson-env-frontend ui to kubernetes
-        server: $KUBERNETES_MASTER
-        #        token: $KUBERNETES_AUTH_TOKEN
-        insecure-skip-tls-verify: true
-        command: apply -f kube-meetup-handson-env-frontend-config.yml -n $NAMESPACE
+  - kubectl:
+      name: deploy kube-meetup-handson-env-frontend ui to kubernetes
+      server: $KUBERNETES_MASTER
+      token: $KUBERNETES_AUTH_TOKEN
+      insecure-skip-tls-verify: true
+      command: apply -f kube-meetup-handson-env-frontend-config.yml -n $NAMESPACE
